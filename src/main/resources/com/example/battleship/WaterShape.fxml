@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Line endX="-23.3289794921875" endY="63.99998474121094" layoutX="340.0" layoutY="152.0" startX="-96.0" startY="-4.8000030517578125" stroke="#dc2828" strokeWidth="10.0" />
+      <Line endX="37.5999755859375" endY="-44.07106018066406" layoutX="272.0" layoutY="189.0" startX="-31.79998779296875" startY="27.471084594726562" stroke="#dc3333" strokeWidth="10.0" />
+   </children>
+</Pane>

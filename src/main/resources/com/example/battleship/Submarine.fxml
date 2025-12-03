@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="root" prefWidth="150" prefHeight="50"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.battleship.controller.GameController">
+
+    <Rectangle width="150" height="35" arcWidth="20" arcHeight="20"
+               fill="#2D572C" stroke="black" strokeWidth="3"/>
+
+    <Rectangle x="60" y="-5" width="40" height="20"
+               fill="#3C7A3B" stroke="black" strokeWidth="2"/>
+
+    <Circle centerX="80" centerY="12" radius="6"
+            fill="white" stroke="black"/>
+</AnchorPane>
+
+

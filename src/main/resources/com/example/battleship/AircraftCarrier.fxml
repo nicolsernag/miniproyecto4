@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
+   <children>
+      <Polygon fill="#8aa5bf" layoutX="282.0" layoutY="195.0" points="-45.0, 1.9999847412109375, -45.0, -44.00001525878906, -86.79998779296875, -23.000015258789062" stroke="#00000001" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90a9c1" height="46.0" layoutX="237.0" layoutY="151.0" stroke="#00000003" strokeType="INSIDE" width="126.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f475e" height="20.0" layoutX="255.0" layoutY="164.0" stroke="BLACK" strokeType="INSIDE" width="108.0" />
+      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="305.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
+      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="272.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
+      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="241.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
+   </children>
+</Pane>

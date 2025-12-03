@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.QuadCurve?>
+<?import javafx.scene.shape.Rectangle?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
+   <children>
+      <QuadCurve controlX="-52.79998779296875" controlY="0.9999847412109375" endX="50.4000244140625" endY="-24.599990844726562" fill="DODGERBLUE" layoutX="192.0" layoutY="203.0" startX="50.0" startY="23.999984741210938" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="49.0" layoutX="242.0" layoutY="178.0" stroke="BLACK" strokeType="INSIDE" width="52.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5a5c5e" height="15.0" layoutX="220.0" layoutY="185.0" stroke="BLACK" strokeType="INSIDE" width="44.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5a5c5e" height="15.0" layoutX="220.0" layoutY="203.0" stroke="BLACK" strokeType="INSIDE" width="44.0" />
+      <Circle fill="#8da3b7" layoutX="220.0" layoutY="193.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="#8da3b7" layoutX="220.0" layoutY="211.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#6d8ca9" height="33.0" layoutX="264.0" layoutY="186.0" stroke="BLACK" strokeType="INSIDE" width="26.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bbcbd9" height="15.0" layoutX="270.0" layoutY="196.0" stroke="BLACK" strokeType="INSIDE" width="14.0" />
+   </children>
+</Pane>
