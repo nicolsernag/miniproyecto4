@@ -1,6 +1,5 @@
 package com.example.battleship.model;
 
-import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
@@ -63,6 +62,21 @@ public abstract class Ship extends Pane {
     }
 
     /* ----------------- POSICIÓN Y CELDAS ----------------- */
+
+    public void rotateAt(int startRow, int startCol) {
+        // 1. Cambiar orientación
+        this.horizontal = !this.horizontal;
+        this.setRotate(this.getRotate() == 0 ? 90 : 0);
+
+        // 2. Recalcular celdas según orientación
+        occupiedCells.clear();
+        for (int i = 0; i < size; i++) {
+            int r = horizontal ? startRow : startRow + i;
+            int c = horizontal ? startCol + i : startCol;
+            occupiedCells.add(new Cell(r, c));
+        }
+    }
+
 
     /**
      * Añade una celda al barco (usa BoardPlayer.placeShip para la lógica completa).

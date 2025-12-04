@@ -9,6 +9,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import java.util.function.Consumer;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +33,14 @@ public class SelectionController {
 
         // 1) Inicializar tablero lógico y ShipPlacer
         board = new BoardPlayer();
-        shipPlacer = new ShipPlacer(playerGrid, board, cellSize, this::onStartDrag);
+
 
         buildGrid();
 
+        shipPlacer = new ShipPlacer(playerGrid, board, cellSize, this::onStartDrag);
         // 3) Crear la flota según tus cantidades
         createFleetInPanel();
+
 
         // 4) Preparar escucha de tecla R para rotar la pieza actual
         // El scene puede no estar aún disponible; esperamos a que se asocie

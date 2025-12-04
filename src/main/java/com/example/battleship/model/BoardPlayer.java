@@ -37,20 +37,38 @@ public class BoardPlayer {
     }
 
     // Verifica si el barco cabe y no hay conflicto
-    public boolean canPlace(Ship ship, int row, int col, boolean horizontal) {
+    public boolean canPlace(Ship ship, int startRow, int startCol, boolean horizontal) {
 
-        int size = (int) ship.getProperties().get("size");
+        int size = ship.getSize();
 
-        for (int i = 0; i < size; i++) {
-
-            int r = horizontal ? row : row + i;
-            int c = horizontal ? col + i : col;
-
-            if (!isInside(r, c)) return false;               // fuera de tablero
-            if (occupiedMap.containsKey(getCell(r, c))) return false; // ya ocupado
+        // 1) Validar límites
+        if (horizontal) {
+            if (startCol + size > 10) return false;
+            if (startRow < 0 || startRow >= 10) return false;
+        } else {
+            if (startRow + size > 10) return false;
+            if (startCol < 0 || startCol >= 10) return false;
         }
-        return true;
+
+        // 2) Validar colisiones con barcos existentes
+        for (Ship placed : placedShips) {
+            for (Cell occ : placed.getOccupiedCells()) {
+
+                for (int i = 0; i < size; i++) {
+                    int r = horizontal ? startRow : startRow + i;
+                    int c = horizontal ? startCol + i : startCol;
+
+                    // Si coincide con alguna celda ocupada → no se puede
+                    if (occ.getRow() == r && occ.getCol() == c) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;  // todo bien
     }
+
 
     public void placeShip(Ship ship, int row, int col, boolean horizontal) {
 
@@ -70,5 +88,32 @@ public class BoardPlayer {
 
         placedShips.add(ship);
     }
+
+    public void relocateShipAfterRotation(Ship ship, int row, int col, boolean horizontal) {
+
+        // 1. Eliminar ocupación anterior
+        for (Cell c : ship.getOccupiedCells()) {
+            occupiedMap.remove(c);
+            c.setOccupied(false);
+        }
+
+        ship.clearCells();
+
+        // 2. Reasignar celdas nuevas según orientación
+        int size = ship.getSize();
+        for (int i = 0; i < size; i++) {
+            int r = horizontal ? row : row + i;
+            int c = horizontal ? col + i : col;
+
+            Cell cell = getCell(r, c);
+            cell.setOccupied(true);
+            occupiedMap.put(cell, ship);
+            ship.addCell(cell);
+        }
+
+        // 3. Actualizar orientación interna
+        ship.setHorizontal(horizontal);
+    }
+
 }
 
