@@ -24,4 +24,3 @@
       <Line endX="20.800003051757812" endY="-0.20000076293945312" layoutX="58.0" layoutY="19.0" startX="12.0" startY="-0.19999980926513672" stroke="WHITE" />
       <Line endX="22.399993896484375" endY="-0.20000076293945312" layoutX="71.0" layoutY="19.0" startX="13.399993896484375" startY="-0.20000076293945312" stroke="WHITE" />
    </children>
-</Pane>
