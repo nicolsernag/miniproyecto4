@@ -2,6 +2,7 @@ package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -15,7 +16,7 @@ import java.util.List;
 public class SelectionController {
 
     @FXML private GridPane playerGrid;
-    @FXML private Pane shipPanel;
+    @FXML private VBox shipPanel;
     @FXML private javafx.scene.control.Button continueButton;
 
     private BoardPlayer board;
@@ -104,8 +105,15 @@ public class SelectionController {
         // Añadir cada barco en su HBox
         for (Ship s : created) {
 
-            HBox container = new HBox(10);
+            HBox container = new HBox();
             container.setSpacing(10);
+            container.setPrefHeight(60);          // altura fija (suficiente para cualquier barco)
+            container.setMinHeight(60);
+            container.setMaxHeight(60);
+            container.setAlignment(Pos.CENTER_LEFT);  // asegura que el barco quede alineado y no flotando
+
+            s.setTranslateX(0);
+            s.setTranslateY(0);
 
             // Botón de rotación
             javafx.scene.control.Button rotateBtn = new javafx.scene.control.Button("↻");
@@ -113,16 +121,10 @@ public class SelectionController {
 
             rotateBtn.setOnAction(e -> s.toggleOrientation(cellSize));
 
-            // Habilitar arrastre
             shipPlacer.enableDrag(s);
-
-            // Asegurar que el barco no expanda todo el HBox
-            HBox.setMargin(s, new javafx.geometry.Insets(5));
-            s.setPickOnBounds(true);
 
             container.getChildren().addAll(s, rotateBtn);
 
-            // Añadir al VBox (se ordenan solos, vertical)
             shipPanel.getChildren().add(container);
         }
     }

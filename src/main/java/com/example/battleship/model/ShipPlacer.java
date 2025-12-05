@@ -17,88 +17,65 @@ public class ShipPlacer {
         this.onStartDrag = onStartDrag;
     }
 
-    // ----------------------------------------------------------
-    // ROTACIÓN POR DOBLE CLIC
-    // ----------------------------------------------------------
-    private void attemptRotateShip(Ship ship) {
-        Integer row = GridPane.getRowIndex(ship);
-        Integer col = GridPane.getColumnIndex(ship);
-        boolean isOnGrid = (row != null && col != null);
-
-        boolean newHorizontal = !ship.isHorizontal();
-        int size = ship.getSize();
-
-        // Caso 1: NO está en el tablero → rotación libre
-        if (!isOnGrid) {
-            ship.toggleOrientation(cellSize);
-            return;
-        }
-
-        // Caso 2: Está en el tablero → validar bordes
-        if (newHorizontal && col + size > 10) return;
-        if (!newHorizontal && row + size > 10) return;
-
-        // Validar colisiones con otros barcos
-        if (!board.canPlace(ship, row, col, newHorizontal)) {
-            System.out.println("Rotación bloqueada por colisión.");
-            return;
-        }
-
-        // Aplicar rotación
-        ship.toggleOrientation(cellSize);
-        board.relocateShipAfterRotation(ship, row, col, newHorizontal);
-    }
 
     // ----------------------------------------------------------
     // DRAG & DROP
     // ----------------------------------------------------------
     public void enableDrag(Ship ship) {
 
-        final double[] original = new double[] { ship.getLayoutX(), ship.getLayoutY() };
         final double[] dragOffset = new double[2];
 
-
-
-        // ---------------------------------
-        // INICIO DEL ARRASTRE
-        // ---------------------------------
+        // GUARDAR POSICIÓN ORIGINAL (translateX/Y)
         ship.setOnMousePressed(e -> {
+
             onStartDrag.accept(ship);
 
             dragOffset[0] = e.getX();
             dragOffset[1] = e.getY();
 
+            ship.setUserData(new double[]{
+                    ship.getTranslateX(),
+                    ship.getTranslateY()
+            });
+
             e.consume();
         });
 
-        // ---------------------------------
-        // ARRASTRAR LIBRE
-        // ---------------------------------
+        // ARRASTRAR EN PANEL LATERAL (usa translate)
         ship.setOnMouseDragged(e -> {
 
-            ship.setLayoutX(e.getSceneX() - dragOffset[0]);
-            ship.setLayoutY(e.getSceneY() - dragOffset[1]);
+            double sceneX = e.getSceneX();
+            double sceneY = e.getSceneY();
+
+            // obtener la posición actual en escena
+            double nodeX = ship.localToScene(0,0).getX();
+            double nodeY = ship.localToScene(0,0).getY();
+
+            ship.setTranslateX(ship.getTranslateX() + (sceneX - nodeX - dragOffset[0]));
+            ship.setTranslateY(ship.getTranslateY() + (sceneY - nodeY - dragOffset[1]));
 
             e.consume();
         });
 
-        // ---------------------------------
-        // SOLTAR → intentar colocar
-        // ---------------------------------
+        // SOLTAR
         ship.setOnMouseReleased(e -> {
 
-            double x = ship.getLayoutX();
-            double y = ship.getLayoutY();
+            // convertir a coordenadas del grid
+            double sceneX = e.getSceneX();
+            double sceneY = e.getSceneY();
 
-            int col = (int) Math.floor(x / cellSize);
-            int row = (int) Math.floor(y / cellSize);
+            double gridX = grid.localToScene(0, 0).getX();
+            double gridY = grid.localToScene(0, 0).getY();
+
+            int col = (int) ((sceneX - gridX) / cellSize);
+            int row = (int) ((sceneY - gridY) / cellSize);
+
             boolean horizontal = ship.isHorizontal();
 
             if (board.canPlace(ship, row, col, horizontal)) {
 
                 board.placeShip(ship, row, col, horizontal);
 
-                // Añadir al grid si aún no está
                 if (!grid.getChildren().contains(ship)) {
                     grid.getChildren().add(ship);
                 }
@@ -106,42 +83,25 @@ public class ShipPlacer {
                 GridPane.setColumnIndex(ship, col);
                 GridPane.setRowIndex(ship, row);
 
-                // Centrar dentro de la celda
-                ship.setLayoutX(0);
-                ship.setLayoutY(0);
+                ship.setTranslateX(0);
+                ship.setTranslateY(0);
 
-                // Desactivar eventos (ya no se puede mover más)
                 ship.setOnMouseDragged(null);
                 ship.setOnMousePressed(null);
-                ship.setOnMouseClicked(null);
                 ship.setOnMouseReleased(null);
 
             } else {
-                // Rebotar al panel lateral
-                ship.setLayoutX(original[0]);
-                ship.setLayoutY(original[1]);
-
-                GridPane.setColumnIndex(ship, null);
-                GridPane.setRowIndex(ship, null);
+                // regresar a la posición original
+                double[] orig = (double[]) ship.getUserData();
+                ship.setTranslateX(orig[0]);
+                ship.setTranslateY(orig[1]);
             }
 
             onStartDrag.accept(null);
             e.consume();
         });
-        // ---------------------------------
-        // ROTACIÓN POR DOBLE CLIC (aquí va)
-        // ---------------------------------
-        ship.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-
-                attemptRotateShip(ship);
-
-                ship.updateVisualSize(cellSize);   // <--- ESTE ES EL LUGAR EXACTO
-
-                e.consume();
-            }
-        });
     }
+
 }
 
 
