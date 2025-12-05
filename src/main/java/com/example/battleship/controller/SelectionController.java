@@ -2,15 +2,12 @@ package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import java.util.function.Consumer;
-
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,40 +91,42 @@ public class SelectionController {
     private void createFleetInPanel() {
         List<Ship> created = new ArrayList<>();
 
-        // 1 carrier (4)
-        Ship carrier = new Carrier(cellSize);
-        created.add(carrier);
+        // Crear la flota
+        created.add(new Carrier(cellSize));  // 1 carrier
+        for (int i = 0; i < 2; i++) created.add(new Submarine(cellSize));  // 2 submarinos
+        for (int i = 0; i < 3; i++) created.add(new Destroyer(cellSize));  // 3 destructores
+        for (int i = 0; i < 4; i++) created.add(new Frigate(cellSize));    // 4 fragatas
 
-        // 2 submarinos (3)
-        for (int i = 0; i < 2; i++) created.add(new Submarine(cellSize));
+        // Limpiar el VBox
+        shipPanel.getChildren().clear();
 
-        // 3 destructores (2)
-        for (int i = 0; i < 3; i++) created.add(new Destroyer(cellSize));
 
-        // 4 fragatas (1)
-        for (int i = 0; i < 4; i++) created.add(new Frigate(cellSize));
-
-        // Colocar visualmente en el panel lateral, uno debajo del otro
-        double y = 10;
-        double gap = 10;
+        // Añadir cada barco en su HBox
         for (Ship s : created) {
-            s.setLayoutX(10);
-            s.setLayoutY(y);
-            // registrar tamaño "original" en propiedades si quieres
-            s.getProperties().put("size", s instanceof Carrier ? 4 :
-                    s instanceof Submarine ? 3 :
-                            s instanceof Destroyer ? 2 : 1);
 
-            // habilitar drag & drop
+            HBox container = new HBox(10);
+            container.setSpacing(10);
+
+            // Botón de rotación
+            javafx.scene.control.Button rotateBtn = new javafx.scene.control.Button("↻");
+            rotateBtn.setStyle("-fx-font-size: 18; -fx-background-radius: 8;");
+
+            rotateBtn.setOnAction(e -> s.toggleOrientation(cellSize));
+
+            // Habilitar arrastre
             shipPlacer.enableDrag(s);
 
-            // añadir al panel lateral padre (no al GridPane todavía)
-            shipPanel.getChildren().add(s);
+            // Asegurar que el barco no expanda todo el HBox
+            HBox.setMargin(s, new javafx.geometry.Insets(5));
+            s.setPickOnBounds(true);
 
-            // avanzar la y para siguiente barco (se guarda el alto por cellSize*1.1)
-            y += (cellSize * 1.4 + gap);
+            container.getChildren().addAll(s, rotateBtn);
+
+            // Añadir al VBox (se ordenan solos, vertical)
+            shipPanel.getChildren().add(container);
         }
     }
+
 
     /**
      * Callback cuando se inicia el arrastre de un barco.
@@ -169,4 +168,5 @@ public class SelectionController {
             return false;
         }
     }
+
 }

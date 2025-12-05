@@ -1,8 +1,7 @@
 package com.example.battleship.model;
 
-import javafx.scene.layout.Pane;
+import javafx.geometry.Bounds;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
@@ -10,89 +9,70 @@ import javafx.scene.transform.Scale;
 public class Frigate extends Ship {
 
     public Frigate(double cellSize) {
-        super(1);
-        // El barco original era aprox 120 px de ancho.
-        double originalWidth = 110;
-        double scaleFactor = cellSize / originalWidth;
+        super(1); // ocupa 1 celda
 
-        // Ajustar tamaño del contenedor
-        this.setPrefSize(cellSize, cellSize);
+        double targetSize = cellSize;
+        this.setPrefSize(targetSize, targetSize);
 
-        // ===== Proa del barco =====
+        /* ----- FIGURAS ORIGINALES DEL FXML (normalizadas ≈40 px) ----- */
+
         QuadCurve curve = new QuadCurve();
-        curve.setStartX(50);
-        curve.setStartY(24);
-        curve.setControlX(-52.8);
-        curve.setControlY(1);
-        curve.setEndX(50.4);
-        curve.setEndY(-24.6);
+        curve.setStartX(41.0);
+        curve.setStartY(14.0);
+        curve.setControlX(4.0);
+        curve.setControlY(-0.2);
+        curve.setEndX(41.0);
+        curve.setEndY(-14.0);
         curve.setFill(Color.DODGERBLUE);
         curve.setStroke(Color.BLACK);
-        curve.setLayoutX(192 - 192);  // normalizamos a 0
-        curve.setLayoutY(203 - 178);
+        curve.setLayoutX(-22.0);
+        curve.setLayoutY(20.0);
 
-        // ===== Cuerpo =====
-        Rectangle body = new Rectangle(52, 49);
+        Rectangle body = new Rectangle(20, 28);
         body.setFill(Color.DODGERBLUE);
         body.setStroke(Color.BLACK);
-        body.setArcWidth(5);
-        body.setArcHeight(5);
-        body.setLayoutX(242 - 192);
-        body.setLayoutY(178 - 178);
+        body.setArcWidth(5.0);
+        body.setArcHeight(5.0);
+        body.setLayoutX(19);
+        body.setLayoutY(6);
 
-        // ===== Ventanas rectangulares =====
-        Rectangle window1 = new Rectangle(44, 15);
-        window1.setFill(Color.web("#5a5c5e"));
-        window1.setStroke(Color.BLACK);
-        window1.setArcWidth(5);
-        window1.setArcHeight(5);
-        window1.setLayoutX(220 - 192);
-        window1.setLayoutY(185 - 178);
+        Rectangle w1 = new Rectangle(20, 6);
+        w1.setFill(Color.web("#5a5c5e"));
+        w1.setStroke(Color.BLACK);
+        w1.setArcWidth(5);
+        w1.setArcHeight(5);
+        w1.setLayoutX(11);
+        w1.setLayoutY(11);
 
-        Rectangle window2 = new Rectangle(44, 15);
-        window2.setFill(Color.web("#5a5c5e"));
-        window2.setStroke(Color.BLACK);
-        window2.setArcWidth(5);
-        window2.setArcHeight(5);
-        window2.setLayoutX(220 - 192);
-        window2.setLayoutY(203 - 178);
+        Rectangle w2 = new Rectangle(20, 6);
+        w2.setFill(Color.web("#5a5c5e"));
+        w2.setStroke(Color.BLACK);
+        w2.setArcWidth(5);
+        w2.setArcHeight(5);
+        w2.setLayoutX(11);
+        w2.setLayoutY(23);
 
-        // ===== Ventanas circulares =====
-        Circle p1 = new Circle(7);
-        p1.setFill(Color.web("#8da3b7"));
-        p1.setStroke(Color.BLACK);
-        p1.setLayoutX(220 - 192);
-        p1.setLayoutY(193 - 178);
-
-        Circle p2 = new Circle(7);
-        p2.setFill(Color.web("#8da3b7"));
-        p2.setStroke(Color.BLACK);
-        p2.setLayoutX(220 - 192);
-        p2.setLayoutY(211 - 178);
-
-        // ===== Torre =====
-        Rectangle tower = new Rectangle(26, 33);
+        Rectangle tower = new Rectangle(13, 22);
         tower.setFill(Color.web("#6d8ca9"));
         tower.setStroke(Color.BLACK);
         tower.setArcWidth(5);
         tower.setArcHeight(5);
-        tower.setLayoutX(264 - 192);
-        tower.setLayoutY(186 - 178);
+        tower.setLayoutX(23);
+        tower.setLayoutY(9);
 
-        Rectangle towerWin = new Rectangle(14, 15);
-        towerWin.setFill(Color.web("#bbcbd9"));
-        towerWin.setStroke(Color.BLACK);
-        towerWin.setArcWidth(5);
-        towerWin.setArcHeight(5);
-        towerWin.setLayoutX(270 - 192);
-        towerWin.setLayoutY(196 - 178);
+        // Añadir shapes al Pane
+        this.getChildren().addAll(curve, body, w1, w2, tower);
 
-        // Agregamos Shapes
-        this.getChildren().addAll(curve, body, window1, window2, p1, p2, tower, towerWin);
+        /* ----- ESCALADO AUTOMÁTICO ----- */
 
-        // === Escalar TODO el barco al tamaño de 1 celda ===
-        Scale scale = new Scale(scaleFactor, scaleFactor);
-        this.getTransforms().add(scale);
+        this.applyCss();
+        this.layout();
+        Bounds b = this.getBoundsInLocal();
+
+        double scale = targetSize / Math.max(b.getWidth(), b.getHeight());
+        this.getTransforms().add(new Scale(scale, scale, 0, 0));
     }
 }
+
+
 

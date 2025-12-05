@@ -30,7 +30,7 @@ public class ShipPlacer {
 
         // Caso 1: NO está en el tablero → rotación libre
         if (!isOnGrid) {
-            ship.toggleOrientation();
+            ship.toggleOrientation(cellSize);
             return;
         }
 
@@ -45,7 +45,7 @@ public class ShipPlacer {
         }
 
         // Aplicar rotación
-        ship.toggleOrientation();
+        ship.toggleOrientation(cellSize);
         board.relocateShipAfterRotation(ship, row, col, newHorizontal);
     }
 
@@ -57,15 +57,7 @@ public class ShipPlacer {
         final double[] original = new double[] { ship.getLayoutX(), ship.getLayoutY() };
         final double[] dragOffset = new double[2];
 
-        // ---------------------------------
-        // DOBLE CLIC → ROTAR BARCO
-        // ---------------------------------
-        ship.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                attemptRotateShip(ship);
-                e.consume();
-            }
-        });
+
 
         // ---------------------------------
         // INICIO DEL ARRASTRE
@@ -135,6 +127,19 @@ public class ShipPlacer {
 
             onStartDrag.accept(null);
             e.consume();
+        });
+        // ---------------------------------
+        // ROTACIÓN POR DOBLE CLIC (aquí va)
+        // ---------------------------------
+        ship.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+
+                attemptRotateShip(ship);
+
+                ship.updateVisualSize(cellSize);   // <--- ESTE ES EL LUGAR EXACTO
+
+                e.consume();
+            }
         });
     }
 }

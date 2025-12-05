@@ -55,13 +55,25 @@ public abstract class Ship extends Pane {
         this.getProperties().put("orientation", horizontal ? "H" : "V");
     }
 
-    public void toggleOrientation() {
-        setHorizontal(!horizontal);
-        // rotación visual opcional: 0 / 90 grados
-        this.setRotate(this.getRotate() + 90);
+    public void toggleOrientation(double cellSize) {
+        horizontal = !horizontal;
+        this.setRotate((this.getRotate() + 90) % 360);
+        updateVisualSize(cellSize);
     }
 
+
     /* ----------------- POSICIÓN Y CELDAS ----------------- */
+
+    public void updateVisualSize(double cellSize) {
+        if (horizontal) {
+            setPrefWidth(cellSize * size);
+            setPrefHeight(cellSize);
+        } else {
+            setPrefWidth(cellSize);
+            setPrefHeight(cellSize * size);
+        }
+    }
+
 
     public void rotateAt(int startRow, int startCol) {
         // 1. Cambiar orientación
