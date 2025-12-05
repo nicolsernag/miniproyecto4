@@ -2,17 +2,26 @@
 
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.Rectangle?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
+<Pane prefHeight="40" prefWidth="160" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
    <children>
-      <Polygon fill="#8aa5bf" layoutX="282.0" layoutY="195.0" points="-45.0, 1.9999847412109375, -45.0, -44.00001525878906, -86.79998779296875, -23.000015258789062" stroke="#00000001" strokeType="INSIDE" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#90a9c1" height="46.0" layoutX="237.0" layoutY="151.0" stroke="#00000003" strokeType="INSIDE" width="126.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2f475e" height="20.0" layoutX="255.0" layoutY="164.0" stroke="BLACK" strokeType="INSIDE" width="108.0" />
-      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="305.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
-      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="272.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
-      <Line endX="45.20001220703125" endY="-81.80000305175781" layoutX="241.0" layoutY="257.0" startX="22.0" startY="-81.80000305175781" stroke="#f7efef" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#5d7b96" height="22.0" layoutX="17.0" layoutY="8.0" stroke="BLACK" strokeType="INSIDE" width="134.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#21496e" height="11.0" layoutX="98.0" layoutY="7.0" rotate="-7.4" stroke="BLACK" strokeType="INSIDE" width="57.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#21496e" height="11.0" layoutX="99.0" layoutY="24.0" rotate="7.4" stroke="BLACK" strokeType="INSIDE" width="57.0" />
+      <Line endX="31.0" endY="0.20000171661376953" layoutX="83.0" layoutY="14.0" startX="20.199996948242188" startY="1.8000001907348633" stroke="WHITE" />
+      <Line endX="17.199996948242188" endY="2.9999961853027344" layoutX="97.0" layoutY="25.0" startX="7.399993896484375" startY="1.3999977111816406" stroke="WHITE" />
+      <Line endX="34.0" endY="-0.19999980926513672" layoutX="97.0" layoutY="12.0" startX="21.800003051757812" startY="1.399998664855957" stroke="WHITE" />
+      <Line endX="34.0" endY="-0.19999980926513672" layoutX="116.0" layoutY="9.0" startX="20.199996948242188" startY="1.8000001907348633" stroke="WHITE" />
+      <Line endX="20.600006103515625" endY="3.3999977111816406" layoutX="111.0" layoutY="27.0" startX="7.600006103515625" startY="1.6000022888183594" stroke="WHITE" />
+      <Line endX="22.600006103515625" endY="3.3999977111816406" layoutX="127.0" layoutY="29.0" startX="8.600006103515625" startY="1.7999992370605469" stroke="WHITE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e3143" height="4.0" layoutX="5.0" layoutY="13.0" stroke="BLACK" strokeType="INSIDE" width="18.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e3143" height="4.0" layoutX="5.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" width="18.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2468a6" height="17.0" layoutX="19.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="13.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#21496e" height="16.0" layoutX="35.0" layoutY="11.0" stroke="BLACK" strokeType="INSIDE" width="62.0" />
+      <Line endX="22.399993896484375" endY="-0.20000076293945312" layoutX="26.0" layoutY="19.0" startX="13.0" startY="-0.20000076293945312" stroke="WHITE" />
+      <Line endX="22.399993896484375" endY="-0.20000076293945312" layoutX="42.0" layoutY="19.0" startX="12.0" startY="-0.19999980926513672" stroke="WHITE" />
+      <Line endX="20.800003051757812" endY="-0.20000076293945312" layoutX="58.0" layoutY="19.0" startX="12.0" startY="-0.19999980926513672" stroke="WHITE" />
+      <Line endX="22.399993896484375" endY="-0.20000076293945312" layoutX="71.0" layoutY="19.0" startX="13.399993896484375" startY="-0.20000076293945312" stroke="WHITE" />
    </children>
 </Pane>

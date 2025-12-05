@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.shape.Rectangle?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane prefHeight="40" prefWidth="80" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#4d6d8c" height="60.0" layoutX="200.0" layoutY="140.0" stroke="#00000006" strokeType="INSIDE" width="166.0" />
-      <Polygon fill="DODGERBLUE" layoutX="150.0" layoutY="180.0" points="-31.5999755859375, -10.400009155273438, 50.0, 19.999984741210938, 50.0, -40.00001525878906" stroke="#5c5a5a06" strokeType="INSIDE" style="-fx-fill: #4d6d8c;" />
-      <Polygon fill="DODGERBLUE" layoutX="416.0" layoutY="180.0" points="-50.0, 19.999984741210938, 32.4000244140625, -13.599990844726562, -50.0, -40.00001525878906" stroke="#0000000a" strokeType="INSIDE" style="-fx-fill: #4d6d8c;" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="41.0" layoutX="226.0" layoutY="119.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="41.0" layoutX="248.0" layoutY="119.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="41.0" layoutX="322.0" layoutY="119.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="41.0" layoutX="300.0" layoutY="119.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="41.0" layoutX="263.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="41.0" layoutX="285.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-      <Circle fill="DODGERBLUE" layoutX="233.0" layoutY="119.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="256.0" layoutY="119.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="307.0" layoutY="119.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="330.0" layoutY="119.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="271.0" layoutY="221.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="293.0" layoutY="221.0" radius="7.0" stroke="BLACK" strokeType="INSIDE" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#4d6d8c" height="18.0" layoutX="23.0" layoutY="10.0" stroke="#00000006" strokeType="INSIDE" width="35.0" />
+      <Polygon fill="DODGERBLUE" layoutX="-27.0" layoutY="26.0" points="29.399978637695312, -8.200000762939453, 51.999961853027344, 2.0, 51.999961853027344, -16.0" stroke="#5c5a5a06" strokeType="INSIDE" style="-fx-fill: #4d6d8c;" />
+      <Polygon fill="DODGERBLUE" layoutX="90.0" layoutY="39.0" points="-34.400001525878906, -11.0, -12.400001525878906, -20.799999237060547, -34.400001525878906, -29.0" stroke="#0000000a" strokeType="INSIDE" style="-fx-fill: #4d6d8c;" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="13.0" layoutX="29.0" layoutY="4.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="13.0" layoutX="39.0" layoutY="4.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="13.0" layoutX="34.0" layoutY="22.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="13.0" layoutX="45.0" layoutY="22.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3f4f5e" height="13.0" layoutX="49.0" layoutY="4.0" stroke="BLACK" strokeType="INSIDE" width="4.0" />
    </children>
 </Pane>
