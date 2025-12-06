@@ -1,6 +1,7 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
+import com.example.battleship.view.GameStage;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
@@ -48,14 +49,11 @@ public class SelectionController {
             }
         });
 
-        // 5) Continuar (ejemplo) — se puede conectar a SceneManager
+        continueButton.toFront();
+
         continueButton.setOnAction(e -> {
-            // comprobar que todos los barcos están colocados
             if (allShipsPlaced()) {
-                System.out.println("Lista la flota. Continuar al juego.");
-                // SceneManager.showGame();  // activar según tu aplicación
-            } else {
-                System.out.println("Aún faltan barcos por colocar.");
+                GameStage.getInstance().show(board);
             }
         });
     }

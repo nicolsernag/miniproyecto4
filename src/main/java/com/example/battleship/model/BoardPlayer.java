@@ -1,7 +1,5 @@
 package com.example.battleship.model;
 
-import com.example.battleship.model.Cell;
-
 import java.util.*;
 
 public class BoardPlayer {
@@ -115,5 +113,8 @@ public class BoardPlayer {
         ship.setHorizontal(horizontal);
     }
 
+    public Deque<Ship> getPlacedShips() {
+        return placedShips;
+    }
 }
 
