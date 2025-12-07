@@ -6,6 +6,8 @@ public class BoardPlayer {
 
     private final int rows = 10;
     private final int cols = 10;
+    private final Set<Cell> shots = new HashSet<>();
+
 
     // Estructura principal del tablero
     private final ArrayList<ArrayList<Cell>> grid = new ArrayList<>();
@@ -116,5 +118,6 @@ public class BoardPlayer {
     public Deque<Ship> getPlacedShips() {
         return placedShips;
     }
+
 }
 

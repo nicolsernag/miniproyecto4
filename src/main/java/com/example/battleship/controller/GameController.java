@@ -7,11 +7,20 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import java.util.Random;
+
 public class GameController {
 
     @FXML private GridPane playerGrid;
+    @FXML
+    private GridPane machineGrid;
 
     private BoardPlayer board;
+    private BoardPlayer enemyBoard;
+
+    private final int SIZE = 10;
+    private final int cellSize = 40;
+    private final Random random = new Random();
 
     public void initializeBoard(BoardPlayer board) {
         this.board = board;
@@ -68,6 +77,8 @@ public class GameController {
             playerGrid.getChildren().add(ship);
         }
     }
+
+
 }
 
 

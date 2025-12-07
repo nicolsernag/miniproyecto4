@@ -5,9 +5,35 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<Pane  maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="884.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="659.0" prefWidth="984.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
    <children>
-      <GridPane fx:id="playerGrid" gridLinesVisible="false" layoutX="53.0" layoutY="88.0" prefHeight="400" prefWidth="400">
+      <GridPane fx:id="playerGrid" gridLinesVisible="false" layoutX="49.0" layoutY="104.0" prefHeight="400" prefWidth="400">
+         <columnConstraints>
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+            <ColumnConstraints prefWidth="40" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+            <RowConstraints prefHeight="40" />
+         </rowConstraints>
+      </GridPane>
+      <GridPane fx:id="machineGrid" gridLinesVisible="false" layoutX="525.0" layoutY="104.0" prefHeight="400" prefWidth="400">
          <columnConstraints>
             <ColumnConstraints prefWidth="40" />
             <ColumnConstraints prefWidth="40" />
