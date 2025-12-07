@@ -87,6 +87,37 @@ public class BoardPlayer {
         placedShips.add(ship);
     }
 
+    public ShotResult shoot(int row, int col){
+        Cell cell = getCell(row, col);
+        if(cell.isShot()){
+            return null;
+        }
+        cell.markShot();
+        if(!cell.isOccupied()){
+            return ShotResult.WATER;
+        }
+
+        Ship ship = occupiedMap.get(cell);
+        int index = ship.getOccupiedCells().indexOf(cell);
+        ship.registerHit(index);
+
+        if(ship.isSunk()) {
+            return ShotResult.SUNK;
+        }
+        return ShotResult.HIT;
+
+    }
+
+    public boolean allShipsSunk() {
+        for (Ship s : placedShips) {
+            if (!s.isSunk()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public void relocateShipAfterRotation(Ship ship, int row, int col, boolean horizontal) {
 
         // 1. Eliminar ocupación anterior

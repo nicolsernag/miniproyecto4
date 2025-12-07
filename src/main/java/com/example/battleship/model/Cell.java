@@ -11,6 +11,8 @@ public class Cell {
     private final int row;
     private final int col;
     private boolean occupied = false;
+    private boolean shot = false;
+
 
     public Cell(int row, int col) {
         this.row = row;
@@ -26,6 +28,9 @@ public class Cell {
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }
+
+    public boolean isShot() { return shot; }
+    public void markShot() { this.shot = true; }
 
     @Override
     public boolean equals(Object o) {
