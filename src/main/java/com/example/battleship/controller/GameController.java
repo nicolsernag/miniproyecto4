@@ -6,6 +6,8 @@ import com.example.battleship.model.Ship;
 import com.example.battleship.model.ShotResult;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -90,7 +92,7 @@ public class GameController {
                 cell.setPrefSize(CELL_SIZE,CELL_SIZE);
 
                 cell.setStyle("""
-                -fx-background-color: #1e3a8a;
+                -fx-background-color: #a5b7c6;
                 -fx-border-color: white;
                 -fx-border-width: 1;
             """);
@@ -158,18 +160,45 @@ public class GameController {
     }
 
     private void paintShot(GridPane grid, int row, int col, ShotResult result) {
-
-        Rectangle mark = new Rectangle(CELL_SIZE, CELL_SIZE);
-        mark.setOpacity(0.6);
+        ImageView mark;
+        String imagePath;
 
         switch (result) {
-            case WATER -> mark.setFill(Color.rgb(150, 0, 0, 0.6)); // rojo
-            case HIT -> mark.setFill(Color.rgb(255, 255, 0, 0.7)); // amarillo
-            case SUNK -> mark.setFill(Color.rgb(0, 0, 0, 0.8));    // negro
+            case WATER:
+                imagePath = "/com/example/battleship/ola.png";
+                break;
+            case HIT:
+                imagePath = "/com/example/battleship/bomba.png";
+                break;
+            case SUNK:
+                imagePath = "/com/example/battleship/fuego.png";
+                break;
+            default:
+                return;
         }
 
+        // 2. Crear el ImageView a partir de la ruta de la imagen
+        try {
+            Image image = new Image(getClass().getResourceAsStream(imagePath));
+            mark = new ImageView(image);
+
+            // 3. Configurar el tamaño del ImageView al tamaño de la celda
+            mark.setFitWidth(CELL_SIZE);
+            mark.setFitHeight(CELL_SIZE);
+            mark.setPreserveRatio(true);
+
+        } catch (Exception e) {
+            System.err.println("Error al cargar la imagen: " + imagePath);
+            // Si la imagen falla, usamos el rectángulo rojo de respaldo para impacto
+            Rectangle errorMark = new Rectangle(CELL_SIZE, CELL_SIZE, Color.RED);
+            grid.add(errorMark, col, row); // Usa grid.add(mark, col, row) de la línea 39
+            return;
+        }
         grid.add(mark, col, row);
     }
+
+
+
 }
 
 

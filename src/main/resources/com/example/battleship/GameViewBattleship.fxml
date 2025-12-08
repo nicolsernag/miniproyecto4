@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="1020.0" style="-fx-background-color: #b3c5d7;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="604.0" prefWidth="1020.0" style="-fx-background-color: #374957;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.battleship.controller.GameController">
    <children>
       <GridPane fx:id="playerGrid" gridLinesVisible="false" layoutX="57.0" layoutY="78.0" prefHeight="331.0" prefWidth="346.0">
          <columnConstraints>
@@ -63,25 +63,45 @@
             <RowConstraints prefHeight="40" />
          </rowConstraints>
       </GridPane>
-      <Text fill="#2c2a4a" layoutX="166.0" layoutY="504.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tu tablero" textAlignment="CENTER" wrappingWidth="127.57653045654297">
+      <Text fill="#a5b7c6" layoutX="166.0" layoutY="504.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tu tablero" textAlignment="CENTER" wrappingWidth="127.57653045654297">
          <font>
             <Font name="Arial Rounded MT Bold" size="23.0" />
          </font>
       </Text>
-      <Text fill="#2c2a4a" layoutX="557.0" layoutY="503.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero enemigo" textAlignment="CENTER" wrappingWidth="183.57653045654297">
+      <Text fill="#a5b7c6" layoutX="557.0" layoutY="503.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tablero enemigo" textAlignment="CENTER" wrappingWidth="183.57653045654297">
          <font>
             <Font name="Arial Rounded MT Bold" size="20.0" />
          </font>
       </Text>
-      <ImageView fitHeight="45.0" fitWidth="47.0" layoutX="856.0" layoutY="78.0">
+      <ImageView fitHeight="45.0" fitWidth="47.0" layoutX="880.0" layoutY="77.0">
          <image>
             <Image url="@fuego.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="45.0" fitWidth="47.0" layoutX="856.0" layoutY="139.0">
+      <ImageView fitHeight="45.0" fitWidth="41.0" layoutX="881.0" layoutY="138.0">
          <image>
             <Image url="@ola.png" />
          </image>
       </ImageView>
+      <Text fill="#a5b7c6" layoutX="927.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Hundido" wrappingWidth="83.87109375">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="12.0" />
+         </font>
+      </Text>
+      <Text fill="#a5b7c6" layoutX="927.0" layoutY="164.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agua" wrappingWidth="83.87109375">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="12.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="45.0" fitWidth="47.0" layoutX="878.0" layoutY="199.0">
+         <image>
+            <Image url="@bomba.png" />
+         </image>
+      </ImageView>
+      <Text fill="#a5b7c6" layoutX="927.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tocado" wrappingWidth="83.87109375">
+         <font>
+            <Font name="Arial Rounded MT Bold" size="12.0" />
+         </font>
+      </Text>
    </children>
 </Pane>

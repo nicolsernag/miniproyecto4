@@ -85,7 +85,7 @@ public class SelectionController {
                 cell.setPrefSize(cellSize, cellSize);
 
                 cell.setStyle("""
-                -fx-background-color: #1e3a8a;
+                -fx-background-color: #a5b7c6;
                 -fx-border-color: white;
                 -fx-border-width: 1;
             """);
@@ -128,7 +128,7 @@ public class SelectionController {
 
             // Botón de rotación
             javafx.scene.control.Button rotateBtn = new javafx.scene.control.Button("↻");
-            rotateBtn.setStyle("-fx-font-size: 18; -fx-background-radius: 8; -fx-background-color:  #2c2a4a; -fx-text-fill: #b3c5d7");
+            rotateBtn.setStyle("-fx-font-size: 18; -fx-background-radius: 8; -fx-background-color:  #a5b7c6; -fx-text-fill: #374957");
 
             rotateBtn.setOnAction(e -> s.toggleOrientation(cellSize));
 
