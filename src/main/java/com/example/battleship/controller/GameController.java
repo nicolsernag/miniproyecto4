@@ -6,10 +6,12 @@ import com.example.battleship.model.Ship;
 import com.example.battleship.model.ShotResult;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -41,12 +43,43 @@ public class GameController {
             }
             if(result == ShotResult.WATER){
                 playerTurn = true;
+            } else {
+                machineThread.playTurn();
             }
         });
         prepareEnemyClicks();
     }
 
+    public double getCELL_SIZE() {
+        return CELL_SIZE;
+    }
+
     private void buildGrid(GridPane grid) {
+
+        double cellSize = CELL_SIZE;
+        int gridSize = 10;
+        grid.getColumnConstraints().clear();
+        grid.getRowConstraints().clear();
+
+        //Size for Columns
+        ColumnConstraints cc = new ColumnConstraints();
+        cc.setPrefWidth(cellSize);
+        cc.setMinWidth(cellSize);
+        cc.setMaxWidth(cellSize);
+
+        for (int i = 0; i < gridSize; i++) {
+            grid.getColumnConstraints().add(cc);
+        }
+
+        // Size for rows
+        RowConstraints rc = new RowConstraints();
+        rc.setPrefHeight(cellSize);
+        rc.setMinHeight(cellSize);
+        rc.setMaxHeight(cellSize);
+
+        for (int i = 0; i < gridSize; i++) {
+            grid.getRowConstraints().add(rc);
+        }
 
         grid.getChildren().clear();
 

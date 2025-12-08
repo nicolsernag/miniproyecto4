@@ -1,6 +1,7 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.view.SelectionStage;
+import com.example.battleship.view.WelcomeStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,5 +15,6 @@ public class WelcomeStageController {
     @FXML
     void handlePlay(ActionEvent event) throws IOException {
         SelectionStage.getInstance().getController();
+        WelcomeStage.deleteInstance();
     }
 }
