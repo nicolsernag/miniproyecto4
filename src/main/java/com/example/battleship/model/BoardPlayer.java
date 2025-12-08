@@ -2,8 +2,6 @@ package com.example.battleship.model;
 
 import java.util.*;
 
-
-
 public class BoardPlayer {
 
     private final int rows = 10;

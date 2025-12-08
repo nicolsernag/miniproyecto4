@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.QuadCurve?>
+
+
+<Pane prefHeight="40" prefWidth="40" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Polygon fill="#ff371f" layoutX="-4.0" layoutY="-12.0" points="15.199996948242188, 38.999996185302734, 34.19999694824219, 38.59999084472656, 38.399993896484375, 22.399993896484375" stroke="#00000006" strokeType="INSIDE" />
+      <QuadCurve controlX="2.399993896484375" controlY="-54.20000457763672" endX="-9.600006103515625" endY="-72.40000915527344" fill="#ff371f" layoutX="17.0" layoutY="99.0" startX="13.199996948242188" startY="-72.40000915527344" stroke="#00000002" strokeType="INSIDE" />
+      <Polygon fill="#ff371f" layoutX="6.0" layoutY="-2.0" points="-1.399993896484375, 14.59999942779541, 1.3999967575073242, 28.599987030029297, 22.60000991821289, 28.599987030029297" stroke="#00000008" strokeType="INSIDE" />
+      <Polygon fill="#ff371f" layoutX="-11.0" layoutY="-14.0" points="21.0, 41.5999870300293, 34.399993896484375, 38.999996185302734, 22.600006103515625, 19.99999237060547" stroke="#00000005" strokeType="INSIDE" />
+      <Polygon fill="#ff371f" layoutX="-5.0" layoutY="-19.0" points="21.0, 41.5999870300293, 32.600006103515625, 43.99999237060547, 32.600006103515625, 25.599998474121094" stroke="#00000009" strokeType="INSIDE" />
+      <Polygon fill="#ff371f" layoutX="-10.0" layoutY="-19.0" points="23.399993896484375, 43.9999885559082, 32.600006103515625, 43.99999237060547, 30.0, 18.999996185302734" stroke="#00000004" strokeType="INSIDE" />
+      <QuadCurve controlX="2.399993896484375" controlY="-54.20000457763672" endX="-5.0" endY="-70.4000015258789" fill="#ffb021" layoutX="16.0" layoutY="94.0" startX="11.399993896484375" startY="-70.4000015258789" stroke="#00000002" strokeType="INSIDE" />
+      <Polygon fill="#ffb021" layoutX="-10.0" layoutY="-8.0" points="21.0, 31.599998474121094, 28.79998779296875, 34.59999084472656, 23.0, 20.79999542236328" stroke="#00000005" strokeType="INSIDE" />
+      <Polygon fill="#ffb021" layoutX="-6.0" layoutY="-10.0" points="21.199996948242188, 34.59999084472656, 27.800003051757812, 34.59999084472656, 25.399993896484375, 19.599998474121094" stroke="#00000005" strokeType="INSIDE" />
+      <Polygon fill="#ffb021" layoutY="-9.0" points="19.199996948242188, 32.599998474121094, 27.399993896484375, 32.599998474121094, 25.800003051757812, 20.99999237060547" stroke="#00000005" strokeType="INSIDE" />
+      <Polygon fill="#ffb021" layoutX="-14.0" layoutY="-6.0" points="25.399993896484375, 29.99999237060547, 31.600006103515625, 31.599998474121094, 22.0, 22.199996948242188" stroke="#00000005" strokeType="INSIDE" />
+      <Polygon fill="#ffb021" layoutX="4.0" layoutY="-9.0" points="15.199996948242188, 30.99999237060547, 23.399993896484375, 32.599998474121094, 27.800003051757812, 23.79999542236328" stroke="#00000005" strokeType="INSIDE" />
+   </children>
+</Pane>

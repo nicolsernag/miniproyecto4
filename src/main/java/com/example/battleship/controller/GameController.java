@@ -1,9 +1,6 @@
 package com.example.battleship.controller;
 
-import com.example.battleship.model.BoardPlayer;
-import com.example.battleship.model.Cell;
-import com.example.battleship.model.Ship;
-import com.example.battleship.model.ShotResult;
+import com.example.battleship.model.*;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
 import javafx.scene.layout.ColumnConstraints;
@@ -158,17 +155,16 @@ public class GameController {
     }
 
     private void paintShot(GridPane grid, int row, int col, ShotResult result) {
-
-        Rectangle mark = new Rectangle(CELL_SIZE, CELL_SIZE);
-        mark.setOpacity(0.6);
+        Node shape;
 
         switch (result) {
-            case WATER -> mark.setFill(Color.rgb(150, 0, 0, 0.6)); // rojo
-            case HIT -> mark.setFill(Color.rgb(255, 255, 0, 0.7)); // amarillo
-            case SUNK -> mark.setFill(Color.rgb(0, 0, 0, 0.8));    // negro
+            case WATER -> shape = new WaterShape(CELL_SIZE);
+            case HIT -> shape = new TouchedShape(CELL_SIZE);
+            case SUNK -> shape = new SunkenShape(CELL_SIZE);
+            default -> { return; }
         }
 
-        grid.add(mark, col, row);
+        grid.add(shape, col, row);
     }
 }
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+
+
+<Pane prefHeight="40" prefWidth="40" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1c4b76" height="20.0" layoutX="21.0" layoutY="5.0" rotate="52.8" stroke="BLACK" strokeType="INSIDE" width="4.0" />
+      <Circle fill="#11395e" layoutX="14.0" layoutY="23.0" radius="12.0" stroke="BLACK" strokeType="INSIDE" />
+      <Polygon fill="#ff1f1f" layoutX="-31.0" layoutY="-15.0" points="54.0, 22.360946655273438, 64.80000305175781, 33.399993896484375, 68.39999389648438, 19.199996948242188" stroke="#ef090905" strokeType="INSIDE" />
+      <Polygon fill="#ff231f" layoutX="-7.0" layoutY="-10.0" points="32.399993896484375, 24.99999237060547, 47.0, 22.60000228881836, 36.399993896484375, 11.600003242492676" stroke="#0000000d" strokeType="INSIDE" />
+   </children>
+</Pane>
