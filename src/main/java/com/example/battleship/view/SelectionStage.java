@@ -19,9 +19,9 @@ public class SelectionStage extends Stage {
         setScene(scene);
         setTitle("Battleship");
         setResizable(false);
-        //getIcons().add(
-                //new Image(String.valueOf(getClass().getResource("/com/example/_50zo/mano.png")))
-        //);
+        getIcons().add(
+                new Image(String.valueOf(getClass().getResource("/com/example/battleship/gran-ancla.png")))
+        );
         show();
     }
 

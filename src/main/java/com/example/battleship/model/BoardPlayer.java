@@ -2,12 +2,12 @@ package com.example.battleship.model;
 
 import java.util.*;
 
+
+
 public class BoardPlayer {
 
     private final int rows = 10;
     private final int cols = 10;
-    private final Set<Cell> shots = new HashSet<>();
-
 
     // Estructura principal del tablero
     private final ArrayList<ArrayList<Cell>> grid = new ArrayList<>();
@@ -89,6 +89,37 @@ public class BoardPlayer {
         placedShips.add(ship);
     }
 
+    public ShotResult shoot(int row, int col){
+        Cell cell = getCell(row, col);
+        if(cell.isShot()){
+            return null;
+        }
+        cell.markShot();
+        if(!cell.isOccupied()){
+            return ShotResult.WATER;
+        }
+
+        Ship ship = occupiedMap.get(cell);
+        int index = ship.getOccupiedCells().indexOf(cell);
+        ship.registerHit(index);
+
+        if(ship.isSunk()) {
+            return ShotResult.SUNK;
+        }
+        return ShotResult.HIT;
+
+    }
+
+    public boolean allShipsSunk() {
+        for (Ship s : placedShips) {
+            if (!s.isSunk()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     public void relocateShipAfterRotation(Ship ship, int row, int col, boolean horizontal) {
 
         // 1. Eliminar ocupación anterior
@@ -119,5 +150,38 @@ public class BoardPlayer {
         return placedShips;
     }
 
+    public void placeShipsAutomatically(double cellSize) {
+
+        // 1. Crear los barcos que la IA debe posicionar
+        ArrayList<Ship> shipsToPlace = new ArrayList<>();
+        shipsToPlace.add(new Carrier(cellSize));  // 1 carrier
+        for (int i = 0; i < 2; i++) shipsToPlace.add(new Submarine(cellSize));  // 2 submarinos
+        for (int i = 0; i < 3; i++) shipsToPlace.add(new Destroyer(cellSize));  // 3 destructores
+        for (int i = 0; i < 4; i++) shipsToPlace.add(new Frigate(cellSize));    // 4 fragatas
+
+
+        Random random = new Random();
+
+        // 2. Iterar y colocar cada barco
+        for (Ship ship : shipsToPlace) {
+            boolean placed = false;
+            while (!placed) {
+                // Generar coordenadas aleatorias (0-9)
+                int row = random.nextInt(10);
+                int col = random.nextInt(10);
+
+                // Generar orientación aleatoria (true = horizontal, false = vertical)
+                boolean horizontal = random.nextBoolean();
+
+
+                if (canPlace(ship, row, col, horizontal)) {
+
+
+                    placeShip(ship, row, col, horizontal);
+                    placed = true;
+                }
+            }
+        }
+    }
 }
 

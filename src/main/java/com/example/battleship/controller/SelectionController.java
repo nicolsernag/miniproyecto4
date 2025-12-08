@@ -2,6 +2,9 @@ package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
 import com.example.battleship.view.GameStage;
+import com.example.battleship.view.SelectionStage;
+import com.example.battleship.view.WelcomeStage;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyCode;
@@ -11,8 +14,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.ActionEvent;
 
 public class SelectionController {
 
@@ -52,10 +57,18 @@ public class SelectionController {
         continueButton.toFront();
 
         continueButton.setOnAction(e -> {
-            if (allShipsPlaced()) {
-                GameStage.getInstance().show(board);
+          if (allShipsPlaced()) {
+               GameStage.getInstance().show(board);
+              SelectionStage.deleteInstance();
             }
         });
+
+    }
+
+   @FXML
+    public void handleGame(ActionEvent event) throws IOException {
+        GameStage.getInstance().getController();
+        SelectionStage.deleteInstance();
     }
 
     private void buildGrid() {
@@ -115,7 +128,7 @@ public class SelectionController {
 
             // Botón de rotación
             javafx.scene.control.Button rotateBtn = new javafx.scene.control.Button("↻");
-            rotateBtn.setStyle("-fx-font-size: 18; -fx-background-radius: 8;");
+            rotateBtn.setStyle("-fx-font-size: 18; -fx-background-radius: 8; -fx-background-color:  #2c2a4a; -fx-text-fill: #b3c5d7");
 
             rotateBtn.setOnAction(e -> s.toggleOrientation(cellSize));
 
