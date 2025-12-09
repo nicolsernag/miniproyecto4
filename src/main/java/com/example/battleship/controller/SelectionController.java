@@ -58,8 +58,12 @@ public class SelectionController {
 
         continueButton.setOnAction(e -> {
           if (allShipsPlaced()) {
-               GameStage.getInstance().show(board);
-              SelectionStage.deleteInstance();
+                try {
+                    GameStage.getInstance().show(board);
+                    SelectionStage.deleteInstance();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
 

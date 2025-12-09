@@ -9,7 +9,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class GameStage {
+import java.io.IOException;
+
+public class GameStage extends Stage{
 
     private static GameStage instance;
     private Stage stage;
@@ -37,9 +39,13 @@ public class GameStage {
         }
     }
 
-    public static GameStage getInstance() {
-        if (instance == null) instance = new GameStage();
-        return instance;
+    private static class Holder {
+        private static GameStage INSTANCE = null;
+    }
+
+    public static GameStage getInstance() throws IOException {
+        if (GameStage.Holder.INSTANCE == null) {GameStage.Holder.INSTANCE = new GameStage();}
+        return GameStage.Holder.INSTANCE;
     }
 
     public void show(BoardPlayer board) {
@@ -52,6 +58,13 @@ public class GameStage {
 
     public GameController getController() {
         return controller;
+    }
+
+    public static void deleteInstance() {
+        if (GameStage.Holder.INSTANCE != null) {
+            GameStage.Holder.INSTANCE.close();
+            GameStage.Holder.INSTANCE = null;
+        }
     }
 }
 

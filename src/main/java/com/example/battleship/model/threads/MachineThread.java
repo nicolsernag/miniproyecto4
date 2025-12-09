@@ -36,7 +36,7 @@ public class MachineThread {
             protected Void call() throws Exception {
 
                 // Simula que la IA “piensa”
-                Thread.sleep(600);
+                Thread.sleep(1000);
 
                 final int[] pos = new int[2];
                 ShotResult result;

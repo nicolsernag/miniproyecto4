@@ -5,7 +5,12 @@ import com.example.battleship.model.Cell;
 import com.example.battleship.model.Ship;
 import com.example.battleship.model.ShotResult;
 import com.example.battleship.model.threads.MachineThread;
+import com.example.battleship.model.threads.TimerThread;
+import com.example.battleship.view.GameStage;
+import com.example.battleship.view.LoseStage;
+import com.example.battleship.view.WinStage;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -20,12 +25,15 @@ import javafx.scene.shape.Rectangle;
 public class GameController {
 
     @FXML private GridPane playerGrid; //tablero del jugador(visual)
-    @FXML private GridPane enemyGrid;  //tablero del enemigo(interactivo)
+    @FXML private GridPane enemyGrid;
+    @FXML private Label runTimer;//tablero del enemigo(interactivo)
+    @FXML private Label msgHumanPlayer;
 
     private BoardPlayer playerBoard;
     private BoardPlayer enemyBoard;
 
     private MachineThread machineThread;
+    private TimerThread timerThread;
 
     private boolean playerTurn = true;
     private final double CELL_SIZE = 40;
@@ -35,6 +43,8 @@ public class GameController {
         this.enemyBoard = enemy;
         buildGrid(playerGrid);
         buildGrid(enemyGrid);
+        timerThread = new TimerThread(this);
+        timerThread.start();
         drawPlayerShips();
 
         machineThread = new MachineThread(playerBoard);
@@ -42,16 +52,26 @@ public class GameController {
             paintShot(playerGrid, row, col, result);
             if(playerBoard.allShipsSunk()){
                 System.out.println("perdiste");
+                try {
+                    var controller = LoseStage.getInstance().getController(); // <- paréntesis añadidos
+                    GameStage.deleteInstance();
+                } catch (java.io.IOException ex) {
+                    System.err.println("No se pudo crear LoseStage: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+
             }
             if(result == ShotResult.WATER){
                 playerTurn = true;
+                timerThread = new TimerThread(this);
+                timerThread.start();
+                msgHumanPlayer.setText("");
             } else {
                 machineThread.playTurn();
             }
         });
         prepareEnemyClicks();
     }
-
     public double getCELL_SIZE() {
         return CELL_SIZE;
     }
@@ -105,6 +125,21 @@ public class GameController {
         }
     }
 
+    public void updateTimerLabel(int seconds) {
+        runTimer.setText(seconds + "s");
+    }
+
+    public void handleTimeExpired(){
+        if (!playerTurn) return;
+        msgHumanPlayer.setText("¡Perdiste el turno por tiempo!");
+        //newPlayerTurn.setText("");
+
+        machineThread.playTurn();
+        runTimer.setText("");
+    }
+
+
+
 
     private void drawPlayerShips() {
 
@@ -150,11 +185,23 @@ public class GameController {
         // Si hunde todo → gana el jugador
         if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
             System.out.println("GANASTE");
+            try {
+                var controller = WinStage.getInstance().getController();
+                GameStage.deleteInstance();
+            } catch (java.io.IOException ex) {
+                System.err.println("No se pudo crear Win Stage: " + ex.getMessage());
+                ex.printStackTrace();
+            }
             return;
         }
 
         if (result == ShotResult.WATER) {
             playerTurn = false;
+            if (timerThread != null) {
+                timerThread.stopTimer();
+                timerThread = null;
+                runTimer.setText("");
+            }
             machineThread.playTurn();  // inicia hilo de IA
         }
     }
