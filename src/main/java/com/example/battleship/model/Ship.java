@@ -56,6 +56,7 @@ public abstract class Ship extends Pane {
     }
 
     public void toggleOrientation(double cellSize) {
+        if (placed) return;
         horizontal = !horizontal;
         this.setRotate((this.getRotate() + 90) % 360);
         updateVisualSize(cellSize);
@@ -63,6 +64,16 @@ public abstract class Ship extends Pane {
 
 
     /* ----------------- POSICIÓN Y CELDAS ----------------- */
+
+    private boolean placed = false;
+
+    public boolean isPlaced() {
+        return placed;
+    }
+
+    public void setPlaced(boolean placed) {
+        this.placed = placed;
+    }
 
     public void updateVisualSize(double cellSize) {
         if (horizontal) {

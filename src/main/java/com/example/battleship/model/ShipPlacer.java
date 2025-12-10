@@ -91,6 +91,8 @@ public class ShipPlacer {
                 ship.setTranslateX(0);
                 ship.setTranslateY(0);
 
+                ship.setPlaced(true);// bloquea rotacion
+
                 ship.setOnMouseDragged(null);
                 ship.setOnMousePressed(null);
                 ship.setOnMouseReleased(null);

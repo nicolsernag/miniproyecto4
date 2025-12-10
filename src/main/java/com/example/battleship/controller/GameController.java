@@ -17,7 +17,6 @@ public class GameController {
 
     @FXML private Button showEnemyBtn;
 
-
     @FXML private GridPane playerGrid; //tablero del jugador(visual)
     @FXML private GridPane enemyGrid;  //tablero del enemigo(interactivo)
 
