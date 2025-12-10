@@ -2,6 +2,7 @@ package com.example.battleship.model;
 
 import javafx.scene.layout.Pane;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -13,9 +14,11 @@ import java.util.Map;
  * - Extiende Pane para poder contener Shapes (getChildren()) y ser añadido al GridPane.
  * - Mantiene ArrayList, Map y Deque para cumplir los requisitos de estructuras de datos.
  */
-public abstract class Ship extends Pane {
+public abstract class Ship extends Pane implements Serializable {
 
     private final int size;
+
+    private int shipId;
 
     // Estructuras solicitadas
     protected final ArrayList<Cell> occupiedCells = new ArrayList<>();        // ArrayList
@@ -29,18 +32,21 @@ public abstract class Ship extends Pane {
      * Constructor: todos los barcos deben llamar super(size)
      * @param size número de celdas que ocupa el barco
      */
-    public Ship(int size) {
+    public Ship(int size, int id) {
         this.size = size;
-        // guardar tamaño en propiedades (útil para FXML / controller)
+        this.shipId = id;
         this.getProperties().put("size", size);
 
-        // inicializar mapa de segmentos
         for (int i = 0; i < size; i++) {
             segmentHit.put(i, false);
         }
     }
 
     /* ----------------- GETTERS/SETTERS ----------------- */
+
+    public int getshipId() {
+        return shipId;
+    }
 
     public int getSize() {
         return size;

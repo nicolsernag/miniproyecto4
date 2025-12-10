@@ -1,6 +1,8 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
+import com.example.battleship.model.GameState.GameState;
+import com.example.battleship.model.serializable.SerializableFileHandler;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -10,8 +12,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class GameController {
 
@@ -191,6 +191,19 @@ public class GameController {
 
         grid.add(shape, col, row);
     }
+
+    private void saveGameState() {
+
+        // tablero del jugador y del enemigo convertidos a matrices
+        int[][] playerMatrix = playerBoard.toMatrix();
+        int[][] aiMatrix = enemyBoard.toMatrix();
+
+        GameState state = new GameState(playerMatrix, aiMatrix, playerTurn);
+
+        SerializableFileHandler.saveGame(state);
+        SerializableFileHandler.savePlayerData(playerNickname, playerSunk);
+    }
+
 }
 
 

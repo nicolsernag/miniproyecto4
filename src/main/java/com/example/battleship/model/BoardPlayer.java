@@ -28,6 +28,7 @@ public class BoardPlayer {
         }
     }
 
+
     public Cell getCell(int row, int col) {
         return grid.get(row).get(col);
     }
