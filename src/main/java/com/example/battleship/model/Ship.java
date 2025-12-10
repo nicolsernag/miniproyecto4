@@ -18,7 +18,6 @@ public abstract class Ship extends Pane implements Serializable {
 
     private final int size;
 
-    private int shipId;
 
     // Estructuras solicitadas
     protected final ArrayList<Cell> occupiedCells = new ArrayList<>();        // ArrayList

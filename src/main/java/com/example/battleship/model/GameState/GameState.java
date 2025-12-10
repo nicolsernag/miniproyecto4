@@ -32,5 +32,6 @@ public class GameState implements Serializable {
     public String getNickname() { return nickname; }
     public int getSunkHuman() { return sunkHuman; }
     public int getSunkMachine() { return sunkMachine; }
+
 }
 

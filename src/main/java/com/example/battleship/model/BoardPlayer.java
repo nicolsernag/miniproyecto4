@@ -2,9 +2,10 @@ package com.example.battleship.model;
 
 import com.example.battleship.model.exceptions.ShipPlacementException;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class BoardPlayer {
+public class BoardPlayer implements Serializable {
 
     private final int rows = 10;
     private final int cols = 10;
@@ -260,7 +261,6 @@ public class BoardPlayer {
         }
         return count;
     }
-
 
 }
 
