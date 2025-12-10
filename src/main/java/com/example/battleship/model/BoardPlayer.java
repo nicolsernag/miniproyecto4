@@ -198,5 +198,69 @@ public class BoardPlayer {
             }
         }
     }
+
+    // Devuelve una matriz 10x10 donde:
+// 0 = agua sin disparar
+// 1 = agua disparada
+// 2 = barco sin disparar
+// 3 = barco disparado
+    public int[][] toMatrix() {
+        int[][] m = new int[10][10];
+
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                Cell cell = getCell(r, c);
+
+                if (!cell.isOccupied() && !cell.isShot()) m[r][c] = 0;
+                if (!cell.isOccupied() && cell.isShot())  m[r][c] = 1;
+
+                if (cell.isOccupied() && !cell.isShot())  m[r][c] = 2;
+                if (cell.isOccupied() && cell.isShot())   m[r][c] = 3;
+            }
+        }
+        return m;
+    }
+
+    // Reconstruye el tablero desde una matriz serializable
+    public void loadFromMatrix(int[][] m) {
+
+        // Limpiar tablero
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                Cell cell = getCell(r, c);
+                cell.setOccupied(false);
+                cell.markShot(); // truco: marcar como disparada para reiniciar
+                cell.markShot(); // no hace nada extra
+            }
+        }
+
+        placedShips.clear();
+        occupiedMap.clear();
+
+        // Reconstruir ocupación
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                int val = m[r][c];
+                Cell cell = getCell(r, c);
+
+                cell.setOccupied(val == 2 || val == 3);
+
+                if (val == 1 || val == 3)
+                    cell.markShot();
+            }
+        }
+    }
+
+    public int countSunkShips() {
+        int count = 0;
+        for (Ship ship : placedShips) {
+            if (ship.isSunk()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
 }
 

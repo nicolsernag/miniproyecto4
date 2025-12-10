@@ -1,11 +1,13 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
+import com.example.battleship.model.GameState.FileManager;
 import com.example.battleship.model.GameState.GameState;
 import com.example.battleship.model.serializable.SerializableFileHandler;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -16,6 +18,10 @@ import javafx.scene.layout.RowConstraints;
 public class GameController {
 
     @FXML private Button showEnemyBtn;
+
+    @FXML
+    private TextField nicknameField;
+    private String playerNickname;
 
     @FXML private GridPane playerGrid; //tablero del jugador(visual)
     @FXML private GridPane enemyGrid;  //tablero del enemigo(interactivo)
@@ -28,7 +34,19 @@ public class GameController {
     private boolean playerTurn = true;
     private final double CELL_SIZE = 40;
 
+    public void setPlayerNicknameField(TextField tf) {
+        this.nicknameField = tf;
+    }
+
     public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
+        GameState saved = SerializableFileHandler.loadGameState();
+
+        if (saved != null) {
+            playerBoard.loadFromMatrix(saved.getPlayerMatrix());
+            enemyBoard.loadFromMatrix(saved.getEnemyMatrix());
+            playerTurn = saved.isPlayerTurn();
+        }
+
         this.playerBoard = player;
         this.enemyBoard = enemy;
         buildGrid(playerGrid);
@@ -177,7 +195,30 @@ public class GameController {
             playerTurn = false;
             machineThread.playTurn();  // inicia hilo de IA
         }
+
+        saveCurrentState();
+
     }
+
+    private void saveCurrentState() {
+        // nickname: preferimos el TextField si existe
+        if (nicknameField != null && nicknameField.getText() != null && !nicknameField.getText().isBlank()) {
+            playerNickname = nicknameField.getText().trim();
+        }
+
+        GameState state = new GameState(
+                playerBoard.toMatrix(),
+                enemyBoard.toMatrix(),
+                playerTurn,
+                playerNickname,
+                playerBoard.countSunkShips(),
+                enemyBoard.countSunkShips()
+        );
+
+        SerializableFileHandler.saveGameState(state);
+        FileManager.savePlayerData(playerNickname, playerBoard.countSunkShips(), enemyBoard.countSunkShips());
+    }
+
 
     private void paintShot(GridPane grid, int row, int col, ShotResult result) {
         Node shape;
@@ -192,17 +233,6 @@ public class GameController {
         grid.add(shape, col, row);
     }
 
-    private void saveGameState() {
-
-        // tablero del jugador y del enemigo convertidos a matrices
-        int[][] playerMatrix = playerBoard.toMatrix();
-        int[][] aiMatrix = enemyBoard.toMatrix();
-
-        GameState state = new GameState(playerMatrix, aiMatrix, playerTurn);
-
-        SerializableFileHandler.saveGame(state);
-        SerializableFileHandler.savePlayerData(playerNickname, playerSunk);
-    }
 
 }
 

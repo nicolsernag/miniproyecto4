@@ -1,40 +1,37 @@
 package com.example.battleship.model.GameState;
 
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FileManager {
-
-    public static void saveBoard(int[][] board, String filename) {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(filename))) {
-
-            for (int row = 0; row < board.length; row++) {
-                for (int col = 0; col < board[row].length; col++) {
-                    pw.print(board[row][col] + " ");
-                }
-                pw.println();
-            }
-
+    private static final String PLAYER_FILE = "player.txt";
+    public static void savePlayerData(String nickname, int sunkHuman, int sunkMachine) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(PLAYER_FILE))) {
+            pw.println("nickname=" + (nickname == null ? "" : nickname));
+            pw.println("sunkHuman=" + sunkHuman);
+            pw.println("sunkMachine=" + sunkMachine);
+            System.out.println("[Persistence] Datos jugador guardados: " + PLAYER_FILE);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public static int[][] loadBoard(String filename) {
-        int[][] board = new int[10][10];
-        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-
-            for (int row = 0; row < 10; row++) {
-                String[] parts = br.readLine().split(" ");
-                for (int col = 0; col < 10; col++) {
-                    board[row][col] = Integer.parseInt(parts[col]);
-                }
+    public static Map<String, String> loadPlayerData() {
+        Map<String, String> out = new HashMap<>();
+        File f = new File(PLAYER_FILE);
+        if (!f.exists()) return out;
+        try (BufferedReader br = new BufferedReader(new FileReader(PLAYER_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] p = line.split("=", 2);
+                if (p.length == 2) out.put(p[0], p[1]);
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return board;
+        return out;
     }
 }
 

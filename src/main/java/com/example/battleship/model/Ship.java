@@ -32,9 +32,8 @@ public abstract class Ship extends Pane implements Serializable {
      * Constructor: todos los barcos deben llamar super(size)
      * @param size número de celdas que ocupa el barco
      */
-    public Ship(int size, int id) {
+    public Ship(int size) {
         this.size = size;
-        this.shipId = id;
         this.getProperties().put("size", size);
 
         for (int i = 0; i < size; i++) {
@@ -44,9 +43,6 @@ public abstract class Ship extends Pane implements Serializable {
 
     /* ----------------- GETTERS/SETTERS ----------------- */
 
-    public int getshipId() {
-        return shipId;
-    }
 
     public int getSize() {
         return size;

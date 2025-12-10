@@ -17,4 +17,12 @@ public class WelcomeStageController {
         SelectionStage.getInstance().getController();
         WelcomeStage.deleteInstance();
     }
+
+    @FXML
+    private Button playButton1;
+
+    @FXML
+    void handleClickContinue(ActionEvent event) {
+
+    }
 }
