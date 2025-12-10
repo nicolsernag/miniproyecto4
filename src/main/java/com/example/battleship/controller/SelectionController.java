@@ -1,6 +1,7 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
+import com.example.battleship.model.exceptions.ShipPlacementException;
 import com.example.battleship.view.GameStage;
 import com.example.battleship.view.SelectionStage;
 import com.example.battleship.view.WelcomeStage;
@@ -58,7 +59,11 @@ public class SelectionController {
 
         continueButton.setOnAction(e -> {
           if (allShipsPlaced()) {
-               GameStage.getInstance().show(board);
+              try {
+                  GameStage.getInstance().show(board);
+              } catch (ShipPlacementException ex) {
+                  throw new RuntimeException(ex);
+              }
               SelectionStage.deleteInstance();
             }
         });

@@ -3,6 +3,7 @@ package com.example.battleship.controller;
 import com.example.battleship.model.*;
 import com.example.battleship.model.threads.MachineThread;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -13,6 +14,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 public class GameController {
+
+    @FXML private Button showEnemyBtn;
+
 
     @FXML private GridPane playerGrid; //tablero del jugador(visual)
     @FXML private GridPane enemyGrid;  //tablero del enemigo(interactivo)
@@ -46,6 +50,28 @@ public class GameController {
         });
         prepareEnemyClicks();
     }
+
+    @FXML
+    private void showEnemyBoard() {
+        for (Ship ship : enemyBoard.getPlacedShips()) {
+
+            // Obtener la primera celda del barco
+            var start = ship.getOccupiedCells().get(0);
+            int row = start.getRow();
+            int col = start.getCol();
+
+            ship.updateVisualSize(CELL_SIZE);
+
+            GridPane.setRowIndex(ship, row);
+            GridPane.setColumnIndex(ship, col);
+
+            // Evitar agregarlo 2 veces
+            if (!enemyGrid.getChildren().contains(ship)) {
+                enemyGrid.getChildren().add(ship);
+            }
+        }
+    }
+
 
     public double getCELL_SIZE() {
         return CELL_SIZE;

@@ -1,5 +1,6 @@
 package com.example.battleship.model;
 
+import com.example.battleship.model.exceptions.ShipPlacementException;
 import javafx.scene.layout.GridPane;
 import java.util.function.Consumer;
 
@@ -74,7 +75,11 @@ public class ShipPlacer {
 
             if (board.canPlace(ship, row, col, horizontal)) {
 
-                board.placeShip(ship, row, col, horizontal);
+                try {
+                    board.placeShip(ship, row, col, horizontal);
+                } catch (ShipPlacementException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 if (!grid.getChildren().contains(ship)) {
                     grid.getChildren().add(ship);

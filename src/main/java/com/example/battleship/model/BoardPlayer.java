@@ -1,5 +1,7 @@
 package com.example.battleship.model;
 
+import com.example.battleship.model.exceptions.ShipPlacementException;
+
 import java.util.*;
 
 public class BoardPlayer {
@@ -35,45 +37,58 @@ public class BoardPlayer {
     }
 
     // Verifica si el barco cabe y no hay conflicto
-    public boolean canPlace(Ship ship, int startRow, int startCol, boolean horizontal) {
+    public boolean canPlace(Ship ship, int row, int col, boolean horizontal) {
 
         int size = ship.getSize();
 
-        // 1) Validar límites
+        // 1) Validación de límites
+        if (row < 0 || col < 0) return false;
         if (horizontal) {
-            if (startCol + size > 10) return false;
-            if (startRow < 0 || startRow >= 10) return false;
+            if (col + size > 10) return false; // se sale por derecha
         } else {
-            if (startRow + size > 10) return false;
-            if (startCol < 0 || startCol >= 10) return false;
+            if (row + size > 10) return false; // se sale por abajo
         }
 
-        // 2) Validar colisiones con barcos existentes
-        for (Ship placed : placedShips) {
-            for (Cell occ : placed.getOccupiedCells()) {
+        // 2) Validar colisiones revisando el mapa ocupado
+        for (int i = 0; i < size; i++) {
+            int r = horizontal ? row : row + i;
+            int c = horizontal ? col + i : col;
 
-                for (int i = 0; i < size; i++) {
-                    int r = horizontal ? startRow : startRow + i;
-                    int c = horizontal ? startCol + i : startCol;
+            Cell cell = getCell(r, c);
 
-                    // Si coincide con alguna celda ocupada → no se puede
-                    if (occ.getRow() == r && occ.getCol() == c) {
-                        return false;
-                    }
-                }
+            // Si ya está ocupada → no se puede
+            if (occupiedMap.containsKey(cell)) {
+                return false;
             }
         }
 
-        return true;  // todo bien
+        return true;
     }
 
 
-    public void placeShip(Ship ship, int row, int col, boolean horizontal) {
 
-        int size = (int) ship.getProperties().get("size");
+    public void placeShip(Ship ship, int row, int col, boolean horizontal)
+            throws ShipPlacementException {
 
+        int size = ship.getSize();
+
+        // 1. Validar límites
         for (int i = 0; i < size; i++) {
+            int r = horizontal ? row : row + i;
+            int c = horizontal ? col + i : col;
 
+            if (!isInside(r, c)) {
+                throw new ShipPlacementException("El barco no cabe en el tablero.");
+            }
+        }
+
+        // 2. Validar colisiones
+        if (!canPlace(ship, row, col, horizontal)) {
+            throw new ShipPlacementException("El barco choca con otro barco.");
+        }
+
+        // 3. Si todo está bien, colocarlo
+        for (int i = 0; i < size; i++) {
             int r = horizontal ? row : row + i;
             int c = horizontal ? col + i : col;
 
@@ -86,6 +101,7 @@ public class BoardPlayer {
 
         placedShips.add(ship);
     }
+
 
     public ShotResult shoot(int row, int col){
         Cell cell = getCell(row, col);
@@ -148,7 +164,7 @@ public class BoardPlayer {
         return placedShips;
     }
 
-    public void placeShipsAutomatically(double cellSize) {
+    public void placeShipsAutomatically(double cellSize) throws ShipPlacementException {
 
         // 1. Crear los barcos que la IA debe posicionar
         ArrayList<Ship> shipsToPlace = new ArrayList<>();

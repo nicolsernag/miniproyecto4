@@ -3,6 +3,7 @@ package com.example.battleship.view;
 import com.example.battleship.controller.GameController;
 import com.example.battleship.controller.WelcomeStageController;
 import com.example.battleship.model.BoardPlayer;
+import com.example.battleship.model.exceptions.ShipPlacementException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -42,7 +43,7 @@ public class GameStage {
         return instance;
     }
 
-    public void show(BoardPlayer board) {
+    public void show(BoardPlayer board) throws ShipPlacementException {
         double cellSize = controller.getCELL_SIZE();
         BoardPlayer enemyBoard = new BoardPlayer();
         enemyBoard.placeShipsAutomatically(cellSize);
