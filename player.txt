@@ -1,0 +1,3 @@
+nickname=
+sunkHuman=0
+sunkMachine=0

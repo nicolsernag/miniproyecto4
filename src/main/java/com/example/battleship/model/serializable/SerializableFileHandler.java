@@ -7,23 +7,25 @@ import java.io.*;
 public class SerializableFileHandler {
 
         private static final String STATE_FILE = "savegame.ser";
-        private static final String PLAYER_FILE = "player.txt";
+
 
         // ---------------- SERIALIZADO ----------------
-        public static void saveGameState(GameState state) {
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(STATE_FILE))) {
-                out.writeObject(state);
+        public static void saveGame(GameState gameSave, String filename) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+                oos.writeObject(gameSave);
+                System.out.println("Partida guardada con éxito");
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        public static GameState loadGameState() {
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(STATE_FILE))) {
-                return (GameState) in.readObject();
-            } catch (Exception e) {
-                return null; // no hay archivo
-            }
+    public static GameState loadGame(String filename) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            return (GameState) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
         }
+    }
 }
 

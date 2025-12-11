@@ -54,6 +54,12 @@ public class GameStage {
     public GameController getController() {
         return controller;
     }
+
+    public void showLoaded(BoardPlayer player, BoardPlayer enemy) {
+        controller.initializeLoadedBoards(player, enemy);
+        stage.show();
+    }
+
 }
 
 

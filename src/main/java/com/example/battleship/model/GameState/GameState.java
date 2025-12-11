@@ -1,37 +1,35 @@
 package com.example.battleship.model.GameState;
 
+import com.example.battleship.model.BoardPlayer;
+import com.example.battleship.model.Ship;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class GameState implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+        private final BoardPlayer playerBoard;
+        private final BoardPlayer machineBoard;
+        private final List<Ship> playerShips;
+        private final List<Ship> machineShips;
+        private final boolean playerTurn;
 
-    private int[][] playerMatrix;
-    private int[][] enemyMatrix;
+        public GameState(BoardPlayer playerBoard, BoardPlayer machineBoard,
+                        List<Ship> playerShips, List<Ship> machineShips,
+                        boolean playerTurn) {
+            this.playerBoard = playerBoard;
+            this.machineBoard = machineBoard;
+            this.playerShips = playerShips;
+            this.machineShips = machineShips;
+            this.playerTurn = playerTurn;
+        }
 
-    private boolean playerTurn;
-    private String nickname;
-    private int sunkHuman;
-    private int sunkMachine;
-
-    public GameState(int[][] playerMatrix, int[][] enemyMatrix,
-                     boolean playerTurn,
-                     String nickname, int sunkHuman, int sunkMachine) {
-        this.playerMatrix = playerMatrix;
-        this.enemyMatrix = enemyMatrix;
-        this.playerTurn = playerTurn;
-        this.nickname = nickname;
-        this.sunkHuman = sunkHuman;
-        this.sunkMachine = sunkMachine;
-    }
-
-    public int[][] getPlayerMatrix() { return playerMatrix; }
-    public int[][] getEnemyMatrix() { return enemyMatrix; }
-    public boolean isPlayerTurn() { return playerTurn; }
-
-    public String getNickname() { return nickname; }
-    public int getSunkHuman() { return sunkHuman; }
-    public int getSunkMachine() { return sunkMachine; }
+        // Getters
+        public BoardPlayer getPlayerBoard() { return playerBoard; }
+        public BoardPlayer getMachineBoard() { return machineBoard; }
+        public List<Ship> getPlayerShips() { return playerShips; }
+        public List<Ship> getMachineShips() { return machineShips; }
+        public boolean isPlayerTurn() { return playerTurn; }
 
 }
 

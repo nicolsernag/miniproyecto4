@@ -16,6 +16,11 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.RowConstraints;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.List;
+
 public class GameController {
 
     @FXML private Button showEnemyBtn;
@@ -45,61 +50,79 @@ public class GameController {
         this.playerNickname = name;
     }
 
-    // ----------------------------
-    // INICIALIZACIÓN PRINCIPAL
-    // ----------------------------
-    public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
+    private List<Ship> playerShips;
+    private List<Ship> machineShips;
 
-        this.playerBoard = player;
-        this.enemyBoard = enemy;
+    // Guardar partida actual
+    public void saveCurrentGame() {
+        GameState gameSave = new GameState(playerBoard, enemyBoard, playerShips, machineShips, playerTurn);
+        SerializableFileHandler.saveGame(gameSave, "mi_partida.sav");
+    }
 
-        // Intentar cargar partida previa
-        GameState saved = SerializableFileHandler.loadGameState();
+    // Cargar partida
+    public void loadSavedGame() {
+        GameState loaded = SerializableFileHandler.loadGame("mi_partida.sav");
+        if (loaded != null) {
+            this.playerBoard = loaded.getPlayerBoard();
+            this.enemyBoard = loaded.getMachineBoard();
+            this.playerShips = loaded.getPlayerShips();
+            this.machineShips = loaded.getMachineShips();
+            this.playerTurn = loaded.isPlayerTurn();
 
-        if (saved != null) {
-            System.out.println("Cargando partida previa...");
-
-            playerBoard.loadFromMatrix(saved.getPlayerMatrix());
-            enemyBoard.loadFromMatrix(saved.getEnemyMatrix());
-            playerTurn = saved.isPlayerTurn();
-
-            this.playerNickname = saved.getPlayerNickname();
-
-            if (nicknameField != null)
-                nicknameField.setText(playerNickname);
+            // Aquí actualizas la UI con los datos cargados
+            //refreshUI();
         }
+    }
 
-        // Construcción visual
+    public void refreshUI() {
+        // Limpiar los tableros
         buildGrid(playerGrid);
         buildGrid(enemyGrid);
 
-        drawPlayerShips();
+        // ----------------------------
+        // Dibujar barcos del jugador
+        // ----------------------------
+        for (Ship ship : playerShips) {
+            ship.updateVisualSize(CELL_SIZE);
+            Cell start = ship.getOccupiedCells().get(0);
 
+            GridPane.setRowIndex(ship, start.getRow());
+            GridPane.setColumnIndex(ship, start.getCol());
+
+            if (!playerGrid.getChildren().contains(ship)) {
+                playerGrid.getChildren().add(ship);
+            }
+        }
+
+        // ----------------------------
+        // Dibujar barcos enemigos (solo si quieres mostrar)
+        // ----------------------------
+        for (Ship ship : machineShips) {
+            ship.updateVisualSize(CELL_SIZE);
+            Cell start = ship.getOccupiedCells().get(0);
+
+            GridPane.setRowIndex(ship, start.getRow());
+            GridPane.setColumnIndex(ship, start.getCol());
+
+            if (!enemyGrid.getChildren().contains(ship)) {
+                enemyGrid.getChildren().add(ship);
+            }
+        }
+
+        // ----------------------------
+        // Restaurar disparos previos
+        // ----------------------------
         restorePreviousShots(playerGrid, playerBoard);
         restorePreviousShots(enemyGrid, enemyBoard);
 
-        // --- Máquina ---
-        machineThread = new MachineThread(playerBoard);
-        machineThread.setListener((row, col, result) -> {
-            paintShot(playerGrid, row, col, result);
+        // ----------------------------
+        // Actualizar turno
+        // ----------------------------
+        //labelTurn.setText(playerTurn ? "Tu turno" : "Turno de la IA");
 
-            if (playerBoard.allShipsSunk()) {
-                System.out.println("PERDISTE");
-            }
-
-            // Cambiar turno
-            if (result == ShotResult.WATER) {
-                playerTurn = true;
-            } else {
-                machineThread.playTurn();
-            }
-
-            saveCurrentState(); // Guardar jugada de la IA
-        });
-
+        // Preparar clicks en enemigo
         prepareEnemyClicks();
     }
-
 
 
     // ----------------------------
@@ -215,37 +238,9 @@ public class GameController {
             machineThread.playTurn();
         }
 
-        saveCurrentState(); // Guardado automático
     }
 
-    // ----------------------------
-    // GUARDAR ESTADO COMPLETO
-    // ----------------------------
-    private void saveCurrentState() {
 
-        if (nicknameField != null && !nicknameField.getText().isBlank()) {
-            playerNickname = nicknameField.getText().trim();
-        }
-
-        GameState state = new GameState(
-                playerBoard.toMatrix(),
-                enemyBoard.toMatrix(),
-                playerTurn,
-                playerNickname,
-                playerBoard.countSunkShips(),
-                enemyBoard.countSunkShips()
-        );
-
-        SerializableFileHandler.saveGameState(state);
-
-        FileManager.savePlayerData(
-                playerNickname,
-                playerBoard.countSunkShips(),
-                enemyBoard.countSunkShips()
-        );
-
-        System.out.println("Estado guardado.");
-    }
 
     // ----------------------------
     // Pintar resultado del disparo
@@ -276,6 +271,92 @@ public class GameController {
             }
         }
     }
+
+    public double getCELL_SIZE() {
+        return CELL_SIZE;
+    }
+
+    private GameState loadedState;
+    public void setLoadedState(GameState state) {
+        this.loadedState = state;
+    }
+
+    public void initializeLoadedBoards(BoardPlayer player, BoardPlayer enemy) {
+
+        this.playerBoard = player;
+        this.enemyBoard = enemy;
+
+        buildGrid(playerGrid);
+        buildGrid(enemyGrid);
+
+        // Dibujar barcos del jugador
+        drawPlayerShips();
+
+        // Restaurar disparos jugador → enemigo
+        restorePreviousShots(enemyGrid, enemy);
+
+        // Restaurar disparos enemigo → jugador
+        restorePreviousShots(playerGrid, player);
+
+        // Turno guardado
+        if (loadedState != null) {
+            this.playerTurn = loadedState.isPlayerTurn();
+        }
+
+        // Prepara la IA
+        machineThread = new MachineThread(playerBoard);
+        machineThread.setListener((row, col, result) -> {
+            paintShot(playerGrid, row, col, result);
+
+            if (playerBoard.allShipsSunk()) {
+                System.out.println("Perdiste");
+            }
+
+            if (result == ShotResult.WATER) {
+                playerTurn = true;
+            } else {
+                machineThread.playTurn();
+            }
+        });
+
+        prepareEnemyClicks();
+    }
+
+    public void loadSavedGame(GridPane grid, String filePath) {
+        try {
+            // 1️⃣ Deserializar BoardPlayer desde archivo
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));
+            BoardPlayer board = (BoardPlayer) in.readObject();
+            in.close();
+
+            // 2️⃣ Reconstruir mapas internos (occupiedMap y placedShips)
+            board.rebuildShipsFromBoard();
+
+            // 3️⃣ Actualizar la UI con los disparos previos
+            Cell[][] cells = board.getCells();
+            for (int r = 0; r < 10; r++) {
+                for (int c = 0; c < 10; c++) {
+                    if (!cells[r][c].isShot()) continue;
+
+                    ShotResult res = board.getShotResultAt(r, c);
+                    if (res != null) {
+                        paintShot(grid, r, c, res); // tu método para dibujar HIT/WATER/SUNK
+                    }
+                }
+            }
+
+            // 4️⃣ Guardar referencia al tablero cargado en tu controlador si la necesitas
+            this.playerBoard = board;
+
+            System.out.println("Partida cargada correctamente.");
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la partida.");
+        }
+    }
+
+
 }
 
 

@@ -222,35 +222,36 @@ public class BoardPlayer implements Serializable {
         return m;
     }
 
-    // Reconstruye el tablero desde una matriz serializable
-    public void loadFromMatrix(int[][] m) {
 
-        // Limpiar tablero
+
+    public Cell[][] getCells() {
+        Cell[][] matrix = new Cell[10][10];
         for (int r = 0; r < 10; r++) {
             for (int c = 0; c < 10; c++) {
-                Cell cell = getCell(r, c);
-                cell.setOccupied(false);
-                cell.markShot(); // truco: marcar como disparada para reiniciar
-                cell.markShot(); // no hace nada extra
+                matrix[r][c] = grid.get(r).get(c);
             }
         }
-
-        placedShips.clear();
-        occupiedMap.clear();
-
-        // Reconstruir ocupación
-        for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
-                int val = m[r][c];
-                Cell cell = getCell(r, c);
-
-                cell.setOccupied(val == 2 || val == 3);
-
-                if (val == 1 || val == 3)
-                    cell.markShot();
-            }
-        }
+        return matrix;
     }
+
+    public ShotResult getShotResultAt(int row, int col) {
+        Cell cell = getCell(row, col);
+
+        // Si no hay tiro, no hay resultado
+        if (!cell.isShot()) return null;
+
+        // Si no está ocupado, es agua
+        if (!cell.isOccupied()) return ShotResult.WATER;
+
+        Ship ship = occupiedMap.get(cell);
+
+        // Seguridad extra: si por alguna razón el mapa no contiene el barco
+        if (ship == null) return ShotResult.WATER;
+
+        return ship.isSunk() ? ShotResult.SUNK : ShotResult.HIT;
+    }
+
+
 
     public int countSunkShips() {
         int count = 0;
@@ -262,5 +263,76 @@ public class BoardPlayer implements Serializable {
         return count;
     }
 
+    public void rebuildShipsFromBoard() {
+
+        placedShips.clear();
+        occupiedMap.clear();
+
+        boolean[][] visited = new boolean[10][10];
+
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+
+                Cell start = getCell(r, c);
+
+                if (!start.isOccupied() || visited[r][c]) continue;
+
+                // Detectar barco completo
+                List<Cell> cells = new ArrayList<>();
+                cells.add(start);
+                visited[r][c] = true;
+
+                // ¿Horizontal?
+                boolean horizontal = false;
+                if (c + 1 < 10 && getCell(r, c + 1).isOccupied())
+                    horizontal = true;
+
+                // Expandir
+                int rr = r, cc = c;
+                if (horizontal) {
+                    while (cc + 1 < 10 && getCell(r, cc + 1).isOccupied()) {
+                        cc++;
+                        visited[r][cc] = true;
+                        cells.add(getCell(r, cc));
+                    }
+                } else {
+                    while (rr + 1 < 10 && getCell(rr + 1, c).isOccupied()) {
+                        rr++;
+                        visited[rr][c] = true;
+                        cells.add(getCell(rr, c));
+                    }
+                }
+
+                int size = cells.size();
+                Ship ship;
+
+                // Crear barco del tipo correcto
+                switch (size) {
+                    case 5 -> ship = new Carrier(30);     // usa tu cellSize
+                    case 3 -> ship = new Destroyer(30);
+                    case 2 -> ship = new Frigate(30);
+                    case 4 -> ship = new Submarine(30);
+                    default -> throw new RuntimeException("Barco de tamaño inválido: " + size);
+                }
+
+                ship.setHorizontal(horizontal);
+
+                for (Cell cell : cells) {
+                    ship.addCell(cell);
+                    occupiedMap.put(cell, ship);
+                }
+
+                placedShips.add(ship);
+
+                // Restaurar disparos
+                for (Cell cell : cells) {
+                    if (cell.isShot()) {
+                        int idx = ship.getOccupiedCells().indexOf(cell);
+                        ship.registerHit(idx);
+                    }
+                }
+            }
+        }
+    }
 }
 
