@@ -42,7 +42,6 @@ public abstract class Ship extends Pane implements Serializable {
 
     /* ----------------- GETTERS/SETTERS ----------------- */
 
-
     public int getSize() {
         return size;
     }
@@ -64,7 +63,13 @@ public abstract class Ship extends Pane implements Serializable {
     }
 
 
+
     /* ----------------- POSICIÓN Y CELDAS ----------------- */
+
+    public Map<Integer, Boolean> getSegmentHit() {
+        return segmentHit;
+    }
+
 
     private boolean placed = false;
 

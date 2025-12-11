@@ -1,6 +1,8 @@
 package com.example.battleship.model;
 
 import com.example.battleship.model.exceptions.ShipPlacementException;
+import com.example.battleship.model.serializable.CellData;
+import com.example.battleship.model.serializable.ShipData;
 
 import java.io.Serializable;
 import java.util.*;
@@ -28,6 +30,26 @@ public class BoardPlayer implements Serializable {
             grid.add(rowList);
         }
     }
+
+    public void addShipFromData(ShipData sd) {
+        Ship ship;
+        switch (sd.getSize()) {
+            case 1 -> ship = new Frigate(40);      // tamaño de celda fijo
+            case 2 -> ship = new Destroyer(40);
+            case 3 -> ship = new Carrier(40);      // si tienes Cruiser
+            case 4 -> ship = new Submarine(40);   // si tienes Battleship
+            default -> throw new IllegalArgumentException("Barco de tamaño desconocido");
+        }
+
+        ship.setHorizontal(sd.isHorizontal());
+        for (CellData cd : sd.getOccupiedCells()) {
+            ship.addCell(new Cell(cd.getRow(), cd.getCol()));
+        }
+
+        ship.setPlaced(true);   // marcar como colocado
+        placedShips.add(ship);  // agregar al deque del BoardPlayer
+    }
+
 
 
     public Cell getCell(int row, int col) {

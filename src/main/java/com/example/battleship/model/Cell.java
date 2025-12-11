@@ -1,5 +1,6 @@
 package com.example.battleship.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  * Debe usarse la misma instancia devuelta por BoardPlayer.getCell(row,col)
  * para evitar confusiones en el Map<Cell,Ship>.
  */
-public class Cell {
+public class Cell implements Serializable {
     private final int row;
     private final int col;
     private boolean occupied = false;

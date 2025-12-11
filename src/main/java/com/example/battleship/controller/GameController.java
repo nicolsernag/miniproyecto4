@@ -3,7 +3,9 @@ package com.example.battleship.controller;
 import com.example.battleship.model.*;
 import com.example.battleship.model.GameState.FileManager;
 import com.example.battleship.model.GameState.GameState;
+import com.example.battleship.model.serializable.CellData;
 import com.example.battleship.model.serializable.SerializableFileHandler;
+import com.example.battleship.model.serializable.ShipData;
 import com.example.battleship.model.threads.MachineThread;
 
 import javafx.fxml.FXML;
@@ -16,9 +18,9 @@ import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.RowConstraints;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GameController {
@@ -54,25 +56,60 @@ public class GameController {
     private List<Ship> machineShips;
 
     // Guardar partida actual
-    public void saveCurrentGame() {
-        GameState gameSave = new GameState(playerBoard, enemyBoard, playerShips, machineShips, playerTurn);
-        SerializableFileHandler.saveGame(gameSave, "mi_partida.sav");
+
+
+    public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
+        this.playerBoard = player;
+        this.enemyBoard = enemy;
+        buildGrid(playerGrid);
+        buildGrid(enemyGrid);
+        drawPlayerShips();
+
+        machineThread = new MachineThread(playerBoard);
+        machineThread.setListener((row, col, result) -> {
+            paintShot(playerGrid, row, col, result);
+            if(playerBoard.allShipsSunk()){
+                System.out.println("perdiste");
+            }
+            if(result == ShotResult.WATER){
+                playerTurn = true;
+            }
+        });
+        prepareEnemyClicks();
     }
 
-    // Cargar partida
-    public void loadSavedGame() {
-        GameState loaded = SerializableFileHandler.loadGame("mi_partida.sav");
-        if (loaded != null) {
-            this.playerBoard = loaded.getPlayerBoard();
-            this.enemyBoard = loaded.getMachineBoard();
-            this.playerShips = loaded.getPlayerShips();
-            this.machineShips = loaded.getMachineShips();
-            this.playerTurn = loaded.isPlayerTurn();
+    public void saveCurrentGame() {
+        Deque<ShipData> playerShipsData = new LinkedList<>();
+        for (Ship ship : playerBoard.getPlacedShips()) {
+            ShipData sd = new ShipData(ship.getSize(), ship.isHorizontal());
+            for (Cell cell : ship.getOccupiedCells()) {
+                sd.addCell(new CellData(cell.getRow(), cell.getCol()));
+            }
+            ship.getSegmentHit().forEach(sd::setSegmentHit);
+            playerShipsData.add(sd);
+        }
 
-            // Aquí actualizas la UI con los datos cargados
-            //refreshUI();
+        Deque<ShipData> machineShipsData = new LinkedList<>();
+        for (Ship ship : enemyBoard.getPlacedShips()) {
+            ShipData sd = new ShipData(ship.getSize(), ship.isHorizontal());
+            for (Cell cell : ship.getOccupiedCells()) {
+                sd.addCell(new CellData(cell.getRow(), cell.getCol()));
+            }
+            ship.getSegmentHit().forEach(sd::setSegmentHit);
+            machineShipsData.add(sd);
+        }
+
+        GameState gameSave = new GameState(playerShipsData, machineShipsData, playerTurn, playerNickname);
+
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("mi_partida.sav"))) {
+            out.writeObject(gameSave);
+            System.out.println("[SAVE] Partida guardada correctamente.");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+
 
     public void refreshUI() {
         // Limpiar los tableros
@@ -123,6 +160,19 @@ public class GameController {
         // Preparar clicks en enemigo
         prepareEnemyClicks();
     }
+
+    public GameState loadSavedGame() {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("mi_partida.sav"))) {
+            GameState loaded = (GameState) in.readObject();
+            System.out.println("[LOAD] Partida cargada correctamente.");
+            return loaded;
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("[LOAD] Error al cargar la partida.");
+            return null;
+        }
+    }
+
 
 
     // ----------------------------

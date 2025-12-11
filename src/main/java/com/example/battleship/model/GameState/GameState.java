@@ -1,35 +1,29 @@
 package com.example.battleship.model.GameState;
 
-import com.example.battleship.model.BoardPlayer;
-import com.example.battleship.model.Ship;
-
+import com.example.battleship.model.serializable.ShipData;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Deque;
 
 public class GameState implements Serializable {
+    private Deque<ShipData> playerShips;
+    private Deque<ShipData> machineShips;
+    private boolean playerTurn;
+    private String playerNickname;
 
-        private final BoardPlayer playerBoard;
-        private final BoardPlayer machineBoard;
-        private final List<Ship> playerShips;
-        private final List<Ship> machineShips;
-        private final boolean playerTurn;
+    public GameState(Deque<ShipData> playerShips,
+                     Deque<ShipData> machineShips,
+                     boolean playerTurn,
+                     String playerNickname) {
+        this.playerShips = playerShips;
+        this.machineShips = machineShips;
+        this.playerTurn = playerTurn;
+        this.playerNickname = playerNickname;
+    }
 
-        public GameState(BoardPlayer playerBoard, BoardPlayer machineBoard,
-                        List<Ship> playerShips, List<Ship> machineShips,
-                        boolean playerTurn) {
-            this.playerBoard = playerBoard;
-            this.machineBoard = machineBoard;
-            this.playerShips = playerShips;
-            this.machineShips = machineShips;
-            this.playerTurn = playerTurn;
-        }
-
-        // Getters
-        public BoardPlayer getPlayerBoard() { return playerBoard; }
-        public BoardPlayer getMachineBoard() { return machineBoard; }
-        public List<Ship> getPlayerShips() { return playerShips; }
-        public List<Ship> getMachineShips() { return machineShips; }
-        public boolean isPlayerTurn() { return playerTurn; }
-
+    public Deque<ShipData> getPlayerShips() { return playerShips; }
+    public Deque<ShipData> getMachineShips() { return machineShips; }
+    public boolean isPlayerTurn() { return playerTurn; }
+    public String getPlayerNickname() { return playerNickname; }
 }
+
 
