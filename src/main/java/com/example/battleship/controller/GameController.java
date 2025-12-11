@@ -8,6 +8,9 @@ import com.example.battleship.view.GameStage;
 import com.example.battleship.view.LoseStage;
 import com.example.battleship.view.WinStage;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,13 +33,17 @@ public class GameController {
     private Label runTimer;//tablero del enemigo(interactivo)
     @FXML
     private Label msgHumanPlayer;
+    @FXML
+    private Button hideButton;
+    @FXML
+    private Button showEnemyBtn;
 
     private BoardPlayer playerBoard;
     private BoardPlayer enemyBoard;
 
     private MachineThread machineThread;
     private TimerThread timerThread;
-    private BoardRenderer boardRenderer; //new
+    //private BoardRenderer boardRenderer; //new
     //private TurnsControlController turnsControl;
 
 
@@ -46,7 +53,7 @@ public class GameController {
     public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
         this.playerBoard = player;
         this.enemyBoard = enemy;
-        this.boardRenderer = new BoardRenderer(CELL_SIZE); //new//
+        //this.boardRenderer = new BoardRenderer(CELL_SIZE); //new//
         buildGrid(playerGrid);
         buildGrid(enemyGrid);
         timerThread = new TimerThread(this);
@@ -62,6 +69,7 @@ public class GameController {
 
         //timerThread = new TimerThread(this);
         //timerThread.start();
+        hideButton.setText("");
         msgHumanPlayer.setText("");
         machineThread.setListener((row, col, result) -> {
             paintShot(playerGrid, row, col, result);
@@ -175,6 +183,49 @@ public class GameController {
         public double getCELL_SIZE () {
             return CELL_SIZE;
         }
+
+        @FXML
+        private void handleHide(){
+            if (enemyBoard == null || enemyGrid == null) return;
+
+            // Recorre los barcos que fueron colocados y los elimina del GridPane
+            for (Ship ship : enemyBoard.getPlacedShips()) {
+                // El método remove() del Pane (al que pertenece GridPane) verifica si el nodo existe y lo elimina
+                enemyGrid.getChildren().remove(ship);
+                hideButton.setText("");
+            }
+
+        }
+
+
+    @FXML
+    private void showEnemyBoard() {
+        hideButton.setText("Ocultar barcos");
+        if (enemyBoard == null || enemyGrid == null) return;
+        for (Ship ship : enemyBoard.getPlacedShips()) {
+
+            // Obtener la primera celda del barco
+            var start = ship.getOccupiedCells().get(0);
+            int row = start.getRow();
+            int col = start.getCol();
+
+            ship.updateVisualSize(CELL_SIZE);
+
+            GridPane.setHalignment(ship, HPos.LEFT);
+            GridPane.setValignment(ship, VPos.TOP);
+
+            ship.setTranslateX(0);
+            ship.setTranslateY(0);
+
+            GridPane.setRowIndex(ship, row);
+            GridPane.setColumnIndex(ship, col);
+
+
+            if (!enemyGrid.getChildren().contains(ship)) {
+                enemyGrid.getChildren().add(ship);
+            }
+        }
+}
 
 
         private void buildGrid(GridPane grid) {
