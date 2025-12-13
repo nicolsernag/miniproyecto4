@@ -28,43 +28,5 @@ public class WelcomeStageController {
         SelectionStage.getInstance().getController();
         WelcomeStage.deleteInstance();
     }
-
-    @FXML
-    private void initialize() {
-        File f = new File("mi_partida.sav");
-        playButton1.setDisable(!f.exists());
-    }
-
-    @FXML
-    private Button playButton1;
-
-    // -----------------------
-    //   CONTINUAR PARTIDA
-    // -----------------------
-    @FXML
-    void handleClickContinue(ActionEvent event) {
-        GameState loaded = SerializableFileHandler.loadGame("mi_partida.sav");
-        if (loaded == null) {
-            System.out.println("[WELCOME] No existe partida guardada.");
-            return;
-        }
-
-        BoardPlayer player = new BoardPlayer();
-        BoardPlayer enemy = new BoardPlayer();
-
-        // Reconstruir barcos
-        for (ShipData sd : loaded.getPlayerShips()) player.addShipFromData(sd);
-        for (ShipData sd : loaded.getMachineShips()) enemy.addShipFromData(sd);
-
-        try {
-            GameStage gameStage = GameStage.getInstance();
-            gameStage.getController().setLoadedState(loaded);
-            gameStage.showLoaded(player, enemy);
-            WelcomeStage.deleteInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }
 

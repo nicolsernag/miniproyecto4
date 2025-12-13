@@ -63,6 +63,8 @@ public class SelectionController {
                   GameStage.getInstance().show(board);
               } catch (ShipPlacementException ex) {
                   throw new RuntimeException(ex);
+              } catch (IOException ex) {
+                  throw new RuntimeException(ex);
               }
               SelectionStage.deleteInstance();
             }

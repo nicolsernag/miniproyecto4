@@ -1,413 +1,410 @@
 package com.example.battleship.controller;
 
 import com.example.battleship.model.*;
-import com.example.battleship.model.GameState.FileManager;
-import com.example.battleship.model.GameState.GameState;
-import com.example.battleship.model.serializable.CellData;
-import com.example.battleship.model.serializable.SerializableFileHandler;
-import com.example.battleship.model.serializable.ShipData;
 import com.example.battleship.model.threads.MachineThread;
-
+import com.example.battleship.model.threads.TimerThread;
+import com.example.battleship.view.BoardRenderer;
+import com.example.battleship.view.GameStage;
+import com.example.battleship.view.LoseStage;
+import com.example.battleship.view.WinStage;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.RowConstraints;
-
-import java.io.*;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class GameController {
 
-    @FXML private Button showEnemyBtn;
-
-    @FXML private TextField nicknameField;
-    private String playerNickname;
-
-    @FXML private GridPane playerGrid;
-    @FXML private GridPane enemyGrid;
+    @FXML
+    private GridPane playerGrid; //tablero del jugador(visual)
+    @FXML
+    private GridPane enemyGrid;
+    @FXML
+    private Label runTimer;//tablero del enemigo(interactivo)
+    @FXML
+    private Label msgHumanPlayer;
+    @FXML
+    private Button hideButton;
+    @FXML
+    private Button showEnemyBtn;
 
     private BoardPlayer playerBoard;
     private BoardPlayer enemyBoard;
 
     private MachineThread machineThread;
+    private TimerThread timerThread;
+    //private BoardRenderer boardRenderer; //new
+    //private TurnsControlController turnsControl;
+
 
     private boolean playerTurn = true;
     private final double CELL_SIZE = 40;
 
-    // ----------------------------
-    // Para recibir el nickname desde afuera
-    // ----------------------------
-    public void setPlayerNicknameField(TextField tf) {
-        this.nicknameField = tf;
-    }
-
-    public void setPlayerNickname(String name) {
-        this.playerNickname = name;
-    }
-
-    private List<Ship> playerShips;
-    private List<Ship> machineShips;
-
-    // Guardar partida actual
-
-
     public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
         this.playerBoard = player;
         this.enemyBoard = enemy;
+        //this.boardRenderer = new BoardRenderer(CELL_SIZE); //new//
         buildGrid(playerGrid);
         buildGrid(enemyGrid);
+        timerThread = new TimerThread(this);
+        timerThread.start();
         drawPlayerShips();
 
+        //boardRenderer.buildGrid(playerGrid); //new
+        //boardRenderer.buildGrid(enemyGrid); //new
+        //boardRenderer.drawPlayerShips(playerGrid, playerBoard);
+
         machineThread = new MachineThread(playerBoard);
+        //this.turnsControl = new TurnsControlController(this, playerBoard, enemyBoard, machineThread);
+
+        //timerThread = new TimerThread(this);
+        //timerThread.start();
+        hideButton.setText("");
+        msgHumanPlayer.setText("");
         machineThread.setListener((row, col, result) -> {
             paintShot(playerGrid, row, col, result);
-            if(playerBoard.allShipsSunk()){
+            if (playerBoard.allShipsSunk()) {
                 System.out.println("perdiste");
+                try {
+                    var controller = LoseStage.getInstance().getController(); // <- paréntesis añadidos
+                    GameStage.deleteInstance();
+                } catch (java.io.IOException ex) {
+                    System.err.println("No se pudo crear LoseStage: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+
             }
-            if(result == ShotResult.WATER){
+            if (result == ShotResult.WATER) {
                 playerTurn = true;
+                timerThread = new TimerThread(this);
+                timerThread.start();
+                msgHumanPlayer.setText("");
+            } else {
+                machineThread.playTurn();
             }
         });
         prepareEnemyClicks();
     }
 
-    public void saveCurrentGame() {
-        Deque<ShipData> playerShipsData = new LinkedList<>();
-        for (Ship ship : playerBoard.getPlacedShips()) {
-            ShipData sd = new ShipData(ship.getSize(), ship.isHorizontal());
-            for (Cell cell : ship.getOccupiedCells()) {
-                sd.addCell(new CellData(cell.getRow(), cell.getCol()));
-            }
-            ship.getSegmentHit().forEach(sd::setSegmentHit);
-            playerShipsData.add(sd);
+    //public GridPane getEnemyGrid() {
+       // return enemyGrid;
+    //}
+
+   // public GridPane getPlayerGrid() {
+       // return playerGrid;
+    //}
+
+    //public BoardRenderer getRenderer() {
+       // return boardRenderer;
+    //}
+
+    //new
+   // public void startPlayerTimer() {
+     //   if (timerThread != null) {
+       //     timerThread.stopTimer();
+         //   timerThread = null;
+        //}
+        //timerThread = new TimerThread(this);
+        //timerThread.start();
+       // playerTurn = true;
+        //msgHumanPlayer.setText("");
+    //}
+
+    //new
+    //public void stopPlayerTimer() {
+      //  if (timerThread != null) {
+        //    timerThread.stopTimer();
+          //  timerThread = null;
+        //}
+        //playerTurn = false;
+    //}
+
+    //new
+   // public void handlePlayerTurn() {
+     //   if (!playerTurn) return;
+       // Pane clicked = (Pane) e.getSource();
+        //int row = (int) clicked.getProperties().get("row");
+        //int col = (int) clicked.getProperties().get("col");
+        //ShotResult result = enemyBoard.shoot(row, col);
+        //if (result == null) return;
+        //boardRenderer.paintShot(enemyGrid, row, col, result);
+        //if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
+          //  System.out.println("GANASTE");
+            //try {
+              //  GameStage.deleteInstance();
+                //var controller = WinStage.getInstance().getController();
+            //} catch (java.io.IOException ex) {
+              //  System.err.println("No se puede crear Win Stage: " + ex.getMessage());
+                //ex.printStackTrace();
+            //}
+            //return;
+
+            // startPlayerTimer();
+
+       // }
+    //}
+
+
+        //public void handlePlayerWin () {
+          //  System.out.println("GANASTE");
+            //try {
+              //  GameStage.deleteInstance();
+                //var controller = WinStage.getInstance().getController();
+            //} catch (java.io.IOException ex) {
+              //  System.err.println("No se puede crear Win Stage: " + ex.getMessage());
+                //ex.printStackTrace();
+            //}
+
+        //}
+
+
+        //neww
+       // public void handlePlayerLoss () {
+         //   System.out.println("perdiste");
+           // try {
+             //   var controller = LoseStage.getInstance().getController(); // <- paréntesis añadidos
+               // GameStage.deleteInstance();
+            //} catch (java.io.IOException ex) {
+              //  System.err.println("No se pudo crear LoseStage: " + ex.getMessage());
+                //ex.printStackTrace();
+            //}
+        //}
+
+        public double getCELL_SIZE () {
+            return CELL_SIZE;
         }
 
-        Deque<ShipData> machineShipsData = new LinkedList<>();
+        @FXML
+        private void handleHide(){
+            if (enemyBoard == null || enemyGrid == null) return;
+
+            // Recorre los barcos que fueron colocados y los elimina del GridPane
+            for (Ship ship : enemyBoard.getPlacedShips()) {
+                // El método remove() del Pane (al que pertenece GridPane) verifica si el nodo existe y lo elimina
+                enemyGrid.getChildren().remove(ship);
+                hideButton.setText("");
+            }
+
+        }
+
+
+    @FXML
+    private void showEnemyBoard() {
+        hideButton.setText("Ocultar barcos");
+        if (enemyBoard == null || enemyGrid == null) return;
         for (Ship ship : enemyBoard.getPlacedShips()) {
-            ShipData sd = new ShipData(ship.getSize(), ship.isHorizontal());
-            for (Cell cell : ship.getOccupiedCells()) {
-                sd.addCell(new CellData(cell.getRow(), cell.getCol()));
-            }
-            ship.getSegmentHit().forEach(sd::setSegmentHit);
-            machineShipsData.add(sd);
-        }
 
-        GameState gameSave = new GameState(playerShipsData, machineShipsData, playerTurn, playerNickname);
+            // Obtener la primera celda del barco
+            var start = ship.getOccupiedCells().get(0);
+            int row = start.getRow();
+            int col = start.getCol();
 
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("mi_partida.sav"))) {
-            out.writeObject(gameSave);
-            System.out.println("[SAVE] Partida guardada correctamente.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void refreshUI() {
-        // Limpiar los tableros
-        buildGrid(playerGrid);
-        buildGrid(enemyGrid);
-
-        // ----------------------------
-        // Dibujar barcos del jugador
-        // ----------------------------
-        for (Ship ship : playerShips) {
             ship.updateVisualSize(CELL_SIZE);
-            Cell start = ship.getOccupiedCells().get(0);
 
-            GridPane.setRowIndex(ship, start.getRow());
-            GridPane.setColumnIndex(ship, start.getCol());
+            GridPane.setHalignment(ship, HPos.LEFT);
+            GridPane.setValignment(ship, VPos.TOP);
 
-            if (!playerGrid.getChildren().contains(ship)) {
-                playerGrid.getChildren().add(ship);
-            }
-        }
+            ship.setTranslateX(0);
+            ship.setTranslateY(0);
 
-        // ----------------------------
-        // Dibujar barcos enemigos (solo si quieres mostrar)
-        // ----------------------------
-        for (Ship ship : machineShips) {
-            ship.updateVisualSize(CELL_SIZE);
-            Cell start = ship.getOccupiedCells().get(0);
+            GridPane.setRowIndex(ship, row);
+            GridPane.setColumnIndex(ship, col);
 
-            GridPane.setRowIndex(ship, start.getRow());
-            GridPane.setColumnIndex(ship, start.getCol());
 
             if (!enemyGrid.getChildren().contains(ship)) {
                 enemyGrid.getChildren().add(ship);
             }
         }
-
-        // ----------------------------
-        // Restaurar disparos previos
-        // ----------------------------
-        restorePreviousShots(playerGrid, playerBoard);
-        restorePreviousShots(enemyGrid, enemyBoard);
-
-        // ----------------------------
-        // Actualizar turno
-        // ----------------------------
-        //labelTurn.setText(playerTurn ? "Tu turno" : "Turno de la IA");
-
-        // Preparar clicks en enemigo
-        prepareEnemyClicks();
-    }
-
-    public GameState loadSavedGame() {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream("mi_partida.sav"))) {
-            GameState loaded = (GameState) in.readObject();
-            System.out.println("[LOAD] Partida cargada correctamente.");
-            return loaded;
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("[LOAD] Error al cargar la partida.");
-            return null;
-        }
-    }
+}
 
 
+        private void buildGrid(GridPane grid) {
 
-    // ----------------------------
-    // Dibujar GridPane
-    // ----------------------------
-    private void buildGrid(GridPane grid) {
-
+        double cellSize = CELL_SIZE;
+        int gridSize = 10;
         grid.getColumnConstraints().clear();
         grid.getRowConstraints().clear();
 
-        for (int i = 0; i < 10; i++) {
-            ColumnConstraints cc = new ColumnConstraints(CELL_SIZE);
-            grid.getColumnConstraints().add(cc);
+        //Size for Columns
+        ColumnConstraints cc = new ColumnConstraints();
+        cc.setPrefWidth(cellSize);
+        cc.setMinWidth(cellSize);
+        cc.setMaxWidth(cellSize);
+
+        for (int i = 0; i < gridSize; i++) {
+          grid.getColumnConstraints().add(cc);
         }
 
-        for (int i = 0; i < 10; i++) {
-            RowConstraints rc = new RowConstraints(CELL_SIZE);
-            grid.getRowConstraints().add(rc);
+        // Size for rows
+        RowConstraints rc = new RowConstraints();
+        rc.setPrefHeight(cellSize);
+        rc.setMinHeight(cellSize);
+        rc.setMaxHeight(cellSize);
+
+        for (int i = 0; i < gridSize; i++) {
+          grid.getRowConstraints().add(rc);
         }
 
         grid.getChildren().clear();
 
         for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
+              for (int c = 0; c < 10; c++) {
 
-                Pane cell = new Pane();
-                cell.setPrefSize(CELL_SIZE, CELL_SIZE);
+                   Pane cell = new Pane();
+                      cell.setPrefSize(CELL_SIZE, CELL_SIZE);
 
-                cell.setStyle("""
-                -fx-background-color: #1e3a8a;
-                -fx-border-color: white;
-                -fx-border-width: 1;
-                """);
+                cell.setStyle(" -fx-background-color: #a5b7c6; -fx-border-color: white; -fx-border-width: 1; ");
 
-                cell.getProperties().put("row", r);
+                      cell.getProperties().put("row", r);
                 cell.getProperties().put("col", c);
 
-                grid.add(cell, c, r);
+              grid.add(cell, c, r);
             }
-        }
-    }
-
-    // ----------------------------
-    // Colocar barcos del jugador
-    // ----------------------------
-    private void drawPlayerShips() {
-
-        for (Ship ship : playerBoard.getPlacedShips()) {
-
-            Cell start = ship.getOccupiedCells().get(0);
-
-            ship.updateVisualSize(CELL_SIZE);
-
-            GridPane.setRowIndex(ship, start.getRow());
-            GridPane.setColumnIndex(ship, start.getCol());
-
-            if (!playerGrid.getChildren().contains(ship)) {
-                playerGrid.getChildren().add(ship);
-            }
-        }
-    }
-
-    // ----------------------------
-    // Restaurar disparos en tablero
-    // ----------------------------
-    private void restorePreviousShots(GridPane grid, BoardPlayer board) {
-
-        Cell[][] cells = board.getCells();
-
-        for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
-
-                if (!cells[r][c].isShot()) continue;
-
-                ShotResult res = board.getShotResultAt(r, c);
-                if (res != null) {
-                    paintShot(grid, r, c, res);
-                }
-            }
-        }
-    }
-
-    // ----------------------------
-    // EVENTO: Disparo del jugador
-    // ----------------------------
-    private void prepareEnemyClicks() {
-        for (Node n : enemyGrid.getChildren()) {
-            n.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handlePlayerShot);
-        }
-    }
-
-    private void handlePlayerShot(MouseEvent e) {
-
-        if (!playerTurn) return;
-
-        Pane clicked = (Pane) e.getSource();
-
-        int row = (int) clicked.getProperties().get("row");
-        int col = (int) clicked.getProperties().get("col");
-
-        ShotResult result = enemyBoard.shoot(row, col);
-
-        if (result == null) return;
-
-        paintShot(enemyGrid, row, col, result);
-
-        if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
-            System.out.println("GANASTE");
+          }
         }
 
-        if (result == ShotResult.WATER) {
-            playerTurn = false;
+        public void updateTimerLabel ( int seconds){
+            runTimer.setText(seconds + "s");
+        }
+
+        public void handleTimeExpired () {
+            if (!playerTurn) return;
+            msgHumanPlayer.setText("¡Perdiste el turno por tiempo!");
+            //newPlayerTurn.setText("");
+
             machineThread.playTurn();
         }
 
-    }
 
+        private void drawPlayerShips() {
 
+        for (Ship ship : playerBoard.getPlacedShips()) {
 
-    // ----------------------------
-    // Pintar resultado del disparo
-    // ----------------------------
-    private void paintShot(GridPane grid, int row, int col, ShotResult result) {
-        Node shape = switch (result) {
-            case WATER -> new WaterShape(CELL_SIZE);
-            case HIT -> new TouchedShape(CELL_SIZE);
-            case SUNK -> new SunkenShape(CELL_SIZE);
-        };
+         //Obtiene la primera celda como ancla
+         Cell start = ship.getOccupiedCells().get(0);
 
-        grid.add(shape, col, row);
-    }
+          int row = start.getRow();
+          int col = start.getCol();
 
-    // Botón mostrar barcos enemigos
-    @FXML
-    private void showEnemyBoard() {
-        for (Ship ship : enemyBoard.getPlacedShips()) {
+        // Redimensiona el barco según orientación
+              ship.updateVisualSize(CELL_SIZE);
 
-            Cell start = ship.getOccupiedCells().get(0);
-            ship.updateVisualSize(CELL_SIZE);
+        // Lo coloca en el GridPane
+            GridPane.setRowIndex(ship, row);
+          GridPane.setColumnIndex(ship, col);
 
-            GridPane.setRowIndex(ship, start.getRow());
-            GridPane.setColumnIndex(ship, start.getCol());
+        playerGrid.getChildren().add(ship);
+        }
+        }
 
-            if (!enemyGrid.getChildren().contains(ship)) {
-                enemyGrid.getChildren().add(ship);
+        private void prepareEnemyClicks () {
+            for (Node n : enemyGrid.getChildren()) {
+                n.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handlePlayerShot);
             }
         }
-    }
 
-    public double getCELL_SIZE() {
-        return CELL_SIZE;
-    }
+      //  private void handlePlayerShot (MouseEvent e){
+        //    Pane clicked = (Pane) e.getSource();
+          //  int row = (int) clicked.getProperties().get("row");
+            //int col = (int) clicked.getProperties().get("col");
+            //turnsControl.processPlayerShot(row, col, clicked);
 
-    private GameState loadedState;
-    public void setLoadedState(GameState state) {
-        this.loadedState = state;
-    }
+            //ShotResult result = enemyBoard.shoot(row, col);
+            //if (result != null && result == ShotResult.WATER) {
+              //  playerTurn = false;
 
-    public void initializeLoadedBoards(BoardPlayer player, BoardPlayer enemy) {
+            //}
+        //}
+        public void handlePlayerShot (MouseEvent e){
 
-        this.playerBoard = player;
-        this.enemyBoard = enemy;
+            if (!playerTurn) return;
+            Pane clicked = (Pane) e.getSource();
 
-        buildGrid(playerGrid);
-        buildGrid(enemyGrid);
+            int row = (int) clicked.getProperties().get("row");
+            int col = (int) clicked.getProperties().get("col");
+            ShotResult result = enemyBoard.shoot(row, col);
 
-        // Dibujar barcos del jugador
-        drawPlayerShips();
+            if (result == null) return;
 
-        // Restaurar disparos jugador → enemigo
-        restorePreviousShots(enemyGrid, enemy);
+            paintShot(enemyGrid, row, col, result);
 
-        // Restaurar disparos enemigo → jugador
-        restorePreviousShots(playerGrid, player);
-
-        // Turno guardado
-        if (loadedState != null) {
-            this.playerTurn = loadedState.isPlayerTurn();
-        }
-
-        // Prepara la IA
-        machineThread = new MachineThread(playerBoard);
-        machineThread.setListener((row, col, result) -> {
-            paintShot(playerGrid, row, col, result);
-
-            if (playerBoard.allShipsSunk()) {
-                System.out.println("Perdiste");
+            // Si gana el jugador
+            if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
+                System.out.println("GANASTE");
+                try {
+                    GameStage.deleteInstance();
+                    var controller = WinStage.getInstance().getController();
+                } catch (java.io.IOException ex) {
+                    System.err.println("No se puede crear Win Stage: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
+                return;
             }
 
             if (result == ShotResult.WATER) {
-                playerTurn = true;
-            } else {
-                machineThread.playTurn();
-            }
-        });
-
-        prepareEnemyClicks();
-    }
-
-    public void loadSavedGame(GridPane grid, String filePath) {
-        try {
-            // 1️⃣ Deserializar BoardPlayer desde archivo
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath));
-            BoardPlayer board = (BoardPlayer) in.readObject();
-            in.close();
-
-            // 2️⃣ Reconstruir mapas internos (occupiedMap y placedShips)
-            board.rebuildShipsFromBoard();
-
-            // 3️⃣ Actualizar la UI con los disparos previos
-            Cell[][] cells = board.getCells();
-            for (int r = 0; r < 10; r++) {
-                for (int c = 0; c < 10; c++) {
-                    if (!cells[r][c].isShot()) continue;
-
-                    ShotResult res = board.getShotResultAt(r, c);
-                    if (res != null) {
-                        paintShot(grid, r, c, res); // tu método para dibujar HIT/WATER/SUNK
-                    }
+                playerTurn = false;
+                if (timerThread != null) {
+                    timerThread.stopTimer();
+                    timerThread = null;
+                    runTimer.setText("");
                 }
+                machineThread.playTurn();// inicia hilo de IA
+            }
+        }
+
+
+        private void paintShot(GridPane grid,int row, int col, ShotResult result){
+            ImageView mark;
+            String imagePath;
+
+            switch (result) {
+                case WATER:
+                    imagePath = "/com/example/battleship/ola.png";
+                    break;
+                case HIT:
+                    imagePath = "/com/example/battleship/bomba.png";
+                    break;
+                case SUNK:
+                    imagePath = "/com/example/battleship/fuego.png";
+                    break;
+                default:
+                    return;
             }
 
-            // 4️⃣ Guardar referencia al tablero cargado en tu controlador si la necesitas
-            this.playerBoard = board;
+            // 2. Crear el ImageView a partir de la ruta de la imagen
+            try {
+                Image image = new Image(getClass().getResourceAsStream(imagePath));
+                mark = new ImageView(image);
 
-            System.out.println("Partida cargada correctamente.");
+                // 3. Configurar el tamaño del ImageView al tamaño de la celda
+                mark.setFitWidth(CELL_SIZE);
+                mark.setFitHeight(CELL_SIZE);
+                mark.setPreserveRatio(true);
 
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("Error al cargar la partida.");
+            } catch (Exception e) {
+                System.err.println("Error al cargar la imagen: " + imagePath);
+                //Si la imagen falla, usamos el rectángulo rojo de respaldo para impacto
+                Rectangle errorMark = new Rectangle(CELL_SIZE, CELL_SIZE, Color.RED);
+                grid.add(errorMark, col, row); // Usa grid.add(mark, col, row) de la línea 39
+                return;
+            }
+            grid.add(mark, col, row);
         }
     }
 
 
-}
+
+
 
 
 

@@ -10,7 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-public class GameStage {
+import java.io.IOException;
+
+public class GameStage extends Stage{
 
     private static GameStage instance;
     private Stage stage;
@@ -38,15 +40,23 @@ public class GameStage {
         }
     }
 
-    public static GameStage getInstance() {
-        if (instance == null) instance = new GameStage();
-        return instance;
+    private static class Holder {
+        private static GameStage INSTANCE = null;
+    }
+
+    public static GameStage getInstance() throws IOException {
+        if (GameStage.Holder.INSTANCE == null) {GameStage.Holder.INSTANCE = new GameStage();}
+        return GameStage.Holder.INSTANCE;
     }
 
     public void show(BoardPlayer board) throws ShipPlacementException {
         double cellSize = controller.getCELL_SIZE();
         BoardPlayer enemyBoard = new BoardPlayer();
-        enemyBoard.placeShipsAutomatically(cellSize);
+        try {
+            enemyBoard.placeShipsAutomatically(cellSize);
+        } catch (ShipPlacementException e) {
+            throw new RuntimeException(e);
+        }
         controller.initializeBoards(board, enemyBoard);
        stage.show();
     }
@@ -55,11 +65,12 @@ public class GameStage {
         return controller;
     }
 
-    public void showLoaded(BoardPlayer player, BoardPlayer enemy) {
-        controller.initializeLoadedBoards(player, enemy);
-        stage.show();
+    public static void deleteInstance() {
+        if (GameStage.Holder.INSTANCE != null) {
+            GameStage.Holder.INSTANCE.close();
+            GameStage.Holder.INSTANCE = null;
+        }
     }
-
 }
 
 
