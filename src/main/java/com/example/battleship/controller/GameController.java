@@ -19,14 +19,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * Controller for the main game view.
+ */
+
 public class GameController {
 
     @FXML
-    private GridPane playerGrid; //tablero del jugador(visual)
+    private GridPane playerGrid; //player's board (visual)
     @FXML
     private GridPane enemyGrid;
     @FXML
-    private Label runTimer;//tablero del enemigo(interactivo)
+    private Label runTimer;//enemy's board (interactive)
     @FXML
     private Label msgHumanPlayer;
     @FXML
@@ -44,6 +48,12 @@ public class GameController {
     private boolean playerTurn = true;
     private final double CELL_SIZE = 40;
 
+
+    /**
+     * Initializes the game boards for the player and the enemy.
+     * @param player
+     * @param enemy
+     */
     public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
         this.playerBoard = player;
         this.enemyBoard = enemy;
@@ -62,7 +72,7 @@ public class GameController {
             if (playerBoard.allShipsSunk()) {
                 System.out.println("perdiste");
                 try {
-                    var controller = LoseStage.getInstance().getController(); // <- paréntesis añadidos
+                    var controller = LoseStage.getInstance().getController();
                     GameStage.deleteInstance();
                 } catch (java.io.IOException ex) {
                     System.err.println("No se pudo crear LoseStage: " + ex.getMessage());
@@ -82,32 +92,40 @@ public class GameController {
         prepareEnemyClicks();
     }
 
-
+        /**
+         * Returns the size of each cell in the grid.
+         * @return cell size
+         */
         public double getCELL_SIZE () {
             return CELL_SIZE;
         }
 
+        /**
+         * Handles the hiding of enemy ships on the grid.
+         */
         @FXML
         private void handleHide(){
             if (enemyBoard == null || enemyGrid == null) return;
 
-            // Recorre los barcos que fueron colocados y los elimina del GridPane
+            // It scans the ships that were placed and removes them from the Gridpane.
             for (Ship ship : enemyBoard.getPlacedShips()) {
-                // El método remove() del Pane (al que pertenece GridPane) verifica si el nodo existe y lo elimina
+                //
                 enemyGrid.getChildren().remove(ship);
                 hideButton.setText("");
             }
 
         }
 
-
+    /**
+     * Shows the enemy ships on the grid.
+     */
     @FXML
     private void showEnemyBoard() {
         hideButton.setText("Ocultar barcos");
         if (enemyBoard == null || enemyGrid == null) return;
         for (Ship ship : enemyBoard.getPlacedShips()) {
 
-            // Obtener la primera celda del barco
+            // obtain the first cell of the ship
             var start = ship.getOccupiedCells().get(0);
             int row = start.getRow();
             int col = start.getCol();
@@ -130,8 +148,11 @@ public class GameController {
         }
 }
 
-
-        private void buildGrid(GridPane grid) {
+    /**
+     * Builds the grid for the game board.
+     * @param grid
+     */
+    private void buildGrid(GridPane grid) {
 
         double cellSize = CELL_SIZE;
         int gridSize = 10;
@@ -176,33 +197,43 @@ public class GameController {
           }
         }
 
+        /**
+         * Updates the timer label with the remaining seconds.
+         * @param seconds remaining time in seconds
+         */
         public void updateTimerLabel ( int seconds){
             runTimer.setText(seconds + "s");
         }
 
+
+        /**
+         * Handles the event when the player's time expires.
+         */
         public void handleTimeExpired () {
             if (!playerTurn) return;
             msgHumanPlayer.setText("¡Perdiste el turno por tiempo!");
-            //newPlayerTurn.setText("");
+
 
             machineThread.playTurn();
         }
 
-
+        /**
+         * Draws the player's ships on the grid.
+         */
         private void drawPlayerShips() {
 
         for (Ship ship : playerBoard.getPlacedShips()) {
 
-         //Obtiene la primera celda como ancla
+         //gets the first cell as anchor
          Cell start = ship.getOccupiedCells().get(0);
 
           int row = start.getRow();
           int col = start.getCol();
 
-        // Redimensiona el barco según orientación
+        // resize the ship according to orientation
               ship.updateVisualSize(CELL_SIZE);
 
-        // Lo coloca en el GridPane
+        // It places it in the gridpane
             GridPane.setRowIndex(ship, row);
           GridPane.setColumnIndex(ship, col);
 
@@ -216,6 +247,10 @@ public class GameController {
             }
         }
 
+        /**
+         * Handles the player's shot on the enemy grid.
+         * @param e MouseEvent triggered by the player's click
+         */
         public void handlePlayerShot (MouseEvent e){
 
             if (!playerTurn) return;
@@ -229,7 +264,7 @@ public class GameController {
 
             paintShot(enemyGrid, row, col, result);
 
-            // Si gana el jugador
+            // if player wins
             if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
                 System.out.println("GANASTE");
                 try {
@@ -253,12 +288,18 @@ public class GameController {
             }
         }
 
-
+    /**
+     * Paints the result of a shot on the grid.
+     * @param grid GridPane where the shot is painted
+     * @param row Row index of the shot
+     * @param col Column index of the shot
+     * @param result Result of the shot (WATER, HIT, SUNK)
+     */
     private void paintShot(GridPane grid, int row, int col, ShotResult result) {
 
         StackPane cell = null;
 
-        // 1. Buscar la celda correcta
+        // Looks for the right cell
         for (Node n : grid.getChildren()) {
             if (GridPane.getRowIndex(n) == row &&
                     GridPane.getColumnIndex(n) == col) {
@@ -269,14 +310,14 @@ public class GameController {
 
         if (cell == null) return;
 
-        // 2. Evitar disparar dos veces en la misma celda
+        // Avoid to shoot the same cell multiple times
         if (cell.getProperties().containsKey("shot")) return;
 
         cell.getProperties().put("shot", true);
 
         Node shape;
 
-        // 3. Crear el Shape según el resultado
+        // Create the shape according to the result
         switch (result) {
             case WATER -> shape = new WaterShape(CELL_SIZE);
             case HIT   -> shape = new TouchedShape(CELL_SIZE);
@@ -284,7 +325,7 @@ public class GameController {
             default    -> { return; }
         }
 
-        // 4. Añadir el disparo encima de la celda
+        //Add the shot above the cell
         cell.getChildren().add(shape);
     }
 }

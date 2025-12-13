@@ -3,6 +3,7 @@ module com.example.battleship {
     requires javafx.fxml;
     requires javafx.graphics;
     requires javafx.base;
+    requires org.junit.jupiter.api;
 
 
 

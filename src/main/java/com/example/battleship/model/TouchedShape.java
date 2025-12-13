@@ -6,8 +6,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * A JavaFX Group representing a touched ship shape composed of various shapes.
+ */
 public class TouchedShape extends Group {
 
+    /**
+     * Constructs a TouchedShape with the specified size.
+     *
+     * @param size the size to scale the shape
+     */
     public TouchedShape(double size) {
 
         double scale = size / 40.0;

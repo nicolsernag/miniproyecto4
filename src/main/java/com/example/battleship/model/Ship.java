@@ -10,26 +10,26 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * Clase base para todos los barcos.
- * - Extiende Pane para poder contener Shapes (getChildren()) y ser añadido al GridPane.
- * - Mantiene ArrayList, Map y Deque para cumplir los requisitos de estructuras de datos.
+ * Abstract class representing a Ship in the Battleship game.
+ * Contains common properties and methods for all ship types.
  */
 public abstract class Ship extends Pane implements Serializable {
 
     private final int size;
 
 
-    // Estructuras solicitadas
+    //requested structures
     protected final ArrayList<Cell> occupiedCells = new ArrayList<>();        // ArrayList
-    protected final Map<Integer, Boolean> segmentHit = new HashMap<>();      // Map: índice de segmento -> golpeado?
-    protected final Deque<ArrayList<Cell>> lastPositions = new LinkedList<>(); // Deque para historial de posiciones
+    protected final Map<Integer, Boolean> segmentHit = new HashMap<>();      // Map: segment index -> HIT?
+    protected final Deque<ArrayList<Cell>> lastPositions = new LinkedList<>(); // Deque for position history
 
-    // Orientación por defecto (true = horizontal, false = vertical)
+    // Default orientation (true = horizontal, false = vertical)
     protected boolean horizontal = true;
 
-    /**
-     * Constructor: todos los barcos deben llamar super(size)
-     * @param size número de celdas que ocupa el barco
+
+    /**     * Constructor for Ship.
+     *
+     * @param size Size of the ship.
      */
     public Ship(int size) {
         this.size = size;
@@ -42,19 +42,39 @@ public abstract class Ship extends Pane implements Serializable {
 
     /* ----------------- GETTERS/SETTERS ----------------- */
 
+    /**
+     * Gets the size of the ship.
+     *
+     * @return Size of the ship.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Checks if the ship is oriented horizontally.
+     *
+     * @return True if horizontal, false if vertical.
+     */
     public boolean isHorizontal() {
         return horizontal;
     }
 
+    /**
+     * Sets the orientation of the ship.
+     *
+     * @param horizontal True for horizontal, false for vertical.
+     */
     public void setHorizontal(boolean horizontal) {
         this.horizontal = horizontal;
         this.getProperties().put("orientation", horizontal ? "H" : "V");
     }
 
+    /**
+     * Toggles the orientation of the ship between horizontal and vertical.
+     *
+     * @param cellSize Size of each cell in the grid.
+     */
     public void toggleOrientation(double cellSize) {
         if (placed) return;
         horizontal = !horizontal;
@@ -64,17 +84,26 @@ public abstract class Ship extends Pane implements Serializable {
 
 
 
-    /* ----------------- POSICIÓN Y CELDAS ----------------- */
+    /* ----------------- POSITION AND CELLS ----------------- */
 
 
 
     private boolean placed = false;
 
 
+    /**
+     * Checks if the ship is placed on the board.
+     * @param placed
+     */
     public void setPlaced(boolean placed) {
         this.placed = placed;
     }
 
+    /**
+     * Updates the visual size of the ship based on its orientation and cell size.
+     *
+     * @param cellSize Size of each cell in the grid.
+     */
     public void updateVisualSize(double cellSize) {
         if (horizontal) {
             setPrefWidth(cellSize * size);
@@ -87,7 +116,9 @@ public abstract class Ship extends Pane implements Serializable {
 
 
     /**
-     * Añade una celda al barco (usa BoardPlayer.placeShip para la lógica completa).
+     * Adds a cell to the ship's occupied cells.
+     *
+     * @param cell Cell to be added.
      */
     public void addCell(Cell cell) {
         if (occupiedCells.size() < size) {
@@ -95,17 +126,23 @@ public abstract class Ship extends Pane implements Serializable {
         }
     }
 
+    /**
+     * Clears all occupied cells of the ship.
+     */
     public void clearCells() {
         occupiedCells.clear();
     }
 
+    /**
+     * Gets the list of occupied cells by the ship.
+     *
+     * @return List of occupied cells.
+     */
     public ArrayList<Cell> getOccupiedCells() {
         return occupiedCells;
     }
 
-    /**
-     * Recupera la última posición guardada (si existe).
-     */
+
     public void undoPosition() {
         if (!lastPositions.isEmpty()) {
             ArrayList<Cell> prev = lastPositions.pop();
@@ -115,18 +152,23 @@ public abstract class Ship extends Pane implements Serializable {
     }
 
 
-    /* ----------------- GOLPES / ESTADO ----------------- */
+    /* ----------------- BLOWS / STATUS ----------------- */
+
 
     /**
-     * Marca el segmento index como golpeado.
-     * @param index índice de segmento (0..size-1)
+     * Registers a hit on the ship at the specified segment index.
+     *
+     * @param index Index of the segment that was hit.
      */
     public void registerHit(int index) {
         if (segmentHit.containsKey(index)) segmentHit.put(index, true);
     }
 
+
     /**
-     * Indica si el barco está hundido (todos los segmentos golpeados).
+     * Checks if the ship is sunk (all segments hit).
+     *
+     * @return True if sunk, false otherwise.
      */
     public boolean isSunk() {
         return segmentHit.values().stream().allMatch(Boolean::booleanValue);

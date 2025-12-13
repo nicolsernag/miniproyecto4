@@ -5,32 +5,45 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the Cell class.
+ */
 class CellTest {
 
     private Cell cell;
 
+
     /**
-     * Crea una celda nueva antes de cada prueba.
+     * Sets up a new Cell instance before each test.
      */
     @BeforeEach
     void setUp() {
         cell = new Cell(3, 5);
     }
 
-    // 📍 Verifica que la fila y la columna se asignan correctamente al crear la celda
+    // Verify that the row and column are assigned correctly when creating the cell
+    /**
+     * Tests that the Cell constructor correctly assigns row and column values.
+     */
     @Test
     void cellStoresRowAndColumnCorrectly() {
         assertEquals(3, cell.getRow());
         assertEquals(5, cell.getCol());
     }
 
-    // 🚢 Comprueba que una celda no está ocupada por defecto
+    // Check that a cell is not occupied by default
+    /**
+     * Tests that a newly created Cell is not occupied by default.
+     */
     @Test
     void cellIsNotOccupiedByDefault() {
         assertFalse(cell.isOccupied());
     }
 
-    // 🧱 Verifica que setOccupied cambia correctamente el estado de ocupación
+    // Verify that setOccupied correctly changes the occupancy status
+    /**
+     * Tests that the setOccupied method correctly updates the occupied state of the Cell.
+     */
     @Test
     void setOccupiedUpdatesOccupiedState() {
         cell.setOccupied(true);
@@ -40,7 +53,10 @@ class CellTest {
         assertFalse(cell.isOccupied());
     }
 
-    // 💥 Comprueba que al marcar un disparo la celda queda marcada como disparada
+    // Verify that when a shot is triggered, the cell is marked as triggered.
+    /**
+     * Tests that the markShot method correctly marks the Cell as shot.
+     */
     @Test
     void markShotSetsShotToTrue() {
         assertFalse(cell.isShot());
@@ -49,7 +65,10 @@ class CellTest {
         assertTrue(cell.isShot());
     }
 
-    // 🔁 Verifica que dos celdas con la misma fila y columna son iguales
+    // Verify that two cells with the same row and column are equal
+    /**
+     * Tests that two Cell instances with the same row and column are considered equal.
+     */
     @Test
     void cellsWithSameRowAndColumnAreEqual() {
         Cell sameCell = new Cell(3, 5);

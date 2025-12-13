@@ -4,20 +4,25 @@ import com.example.battleship.model.exceptions.ShipPlacementException;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Represents the player's board in the Battleship game.
+ * Manages ship placement, shooting mechanics, and board state.
+ */
 public class BoardPlayer implements Serializable {
 
     private final int rows = 10;
     private final int cols = 10;
 
-    // Estructura principal del tablero
+    // main board structure
     private final ArrayList<ArrayList<Cell>> grid = new ArrayList<>();
 
-    // Barcos colocados en orden
+    // ships placed in order
     private final Deque<Ship> placedShips = new LinkedList<>();
 
-    // Mapa de celdas ocupadas → barco
+    // map of occupied cells
     private final Map<Cell, Ship> occupiedMap = new HashMap<>();
 
+    /** Constructor initializes the board grid with empty cells */
     public BoardPlayer() {
         for (int r = 0; r < rows; r++) {
             ArrayList<Cell> rowList = new ArrayList<>();
@@ -29,30 +34,46 @@ public class BoardPlayer implements Serializable {
     }
 
 
+    /**     * Retrieves the cell at the specified row and column.
+     *
+     * @param row The row index of the cell.
+     * @param col The column index of the cell.
+     * @return The Cell object at the specified coordinates.
+     */
     public Cell getCell(int row, int col) {
         return grid.get(row).get(col);
     }
 
+    /** Check if the given coordinates are inside the board */
     public boolean isInside(int row, int col) {
         return row >= 0 && col >= 0 && row < rows && col < cols;
     }
 
-    // Verifica si el barco cabe y no hay conflicto
+    // Check if the ship fits and there are no conflicts
+    /**
+     * Checks if a ship can be placed at the specified coordinates and orientation.
+     *
+     * @param ship       The ship to be placed.
+     * @param row        The starting row index.
+     * @param col        The starting column index.
+     * @param horizontal True if the ship is to be placed horizontally, false for vertical.
+     * @return True if the ship can be placed, false otherwise.
+     */
     public boolean canPlace(Ship ship, int row, int col, boolean horizontal) {
 
         int size = ship.getSize();
 
-        // 1️⃣ Validar coordenadas iniciales
+        // Validate initial coordinates
         if (row < 0 || col < 0) return false;
 
-        // 2️⃣ Validar que el barco cabe completo según orientación
+        // Verify that the boat fits completely according to the orientation.
         if (horizontal) {
-            if (col + size > 10) return false;   // se sale por la derecha
+            if (col + size > 10) return false;   //exits to the right
         } else {
-            if (row + size > 10) return false;   // se sale por abajo
+            if (row + size > 10) return false;   //exit to the right
         }
 
-        // 3️⃣ Validar colisiones celda por celda
+        // Validate collisions cell by cell
         for (int i = 0; i < size; i++) {
 
             int r = horizontal ? row : row + i;
@@ -60,34 +81,42 @@ public class BoardPlayer implements Serializable {
 
             Cell cell = getCell(r, c);
 
-            // Si la celda ya está ocupada, no se puede colocar
+            // If the cell is already occupied, it cannot be placed
             if (cell.isOccupied()) {
                 return false;
             }
         }
 
-        // 4️⃣ Todo es válido
+        // Everything is valid
         return true;
     }
 
 
 
 
-
+    /**
+     * Places a ship on the board at the specified coordinates and orientation.
+     *
+     * @param ship       The ship to be placed.
+     * @param row        The starting row index.
+     * @param col        The starting column index.
+     * @param horizontal True if the ship is to be placed horizontally, false for vertical.
+     * @throws ShipPlacementException If the ship cannot be placed due to collisions or boundaries.
+     */
     public void placeShip(Ship ship, int row, int col, boolean horizontal)
             throws ShipPlacementException {
 
         int size = ship.getSize();
 
-        // 1️⃣ Validar colisiones y límites
+        // Validate collisions and boundaries
         if (!canPlace(ship, row, col, horizontal)) {
             throw new ShipPlacementException("El barco no cabe o choca.");
         }
 
-        // 2️⃣ LIMPIAR estado previo del barco
+        //CLEAN the ship's previous condition
         ship.clearCells();
 
-        // 3️⃣ Colocar definitivamente
+        //Permanently place
         for (int i = 0; i < size; i++) {
             int r = horizontal ? row : row + i;
             int c = horizontal ? col + i : col;
@@ -104,7 +133,13 @@ public class BoardPlayer implements Serializable {
     }
 
 
-
+    /**
+     * Shoots at the specified cell on the board.
+     *
+     * @param row The row index of the target cell.
+     * @param col The column index of the target cell.
+     * @return The result of the shot (HIT, MISS, SUNK) or null if the cell was already shot.
+     */
     public ShotResult shoot(int row, int col){
         Cell cell = getCell(row, col);
         if(cell.isShot()){
@@ -126,6 +161,11 @@ public class BoardPlayer implements Serializable {
 
     }
 
+    /**
+     * Checks if all ships on the board have been sunk.
+     *
+     * @return True if all ships are sunk, false otherwise.
+     */
     public boolean allShipsSunk() {
         for (Ship s : placedShips) {
             if (!s.isSunk()) {
@@ -136,9 +176,17 @@ public class BoardPlayer implements Serializable {
     }
 
 
+    /**
+     * Relocates a ship after rotation to new coordinates and orientation.
+     *
+     * @param ship       The ship to be relocated.
+     * @param row        The new starting row index.
+     * @param col        The new starting column index.
+     * @param horizontal True if the ship is to be placed horizontally, false for vertical.
+     */
     public void relocateShipAfterRotation(Ship ship, int row, int col, boolean horizontal) {
 
-        // 1. Eliminar ocupación anterior
+        //Delete previous occupation
         for (Cell c : ship.getOccupiedCells()) {
             occupiedMap.remove(c);
             c.setOccupied(false);
@@ -146,7 +194,7 @@ public class BoardPlayer implements Serializable {
 
         ship.clearCells();
 
-        // 2. Reasignar celdas nuevas según orientación
+        //Reassign new cells according to orientation
         int size = ship.getSize();
         for (int i = 0; i < size; i++) {
             int r = horizontal ? row : row + i;
@@ -158,33 +206,40 @@ public class BoardPlayer implements Serializable {
             ship.addCell(cell);
         }
 
-        // 3. Actualizar orientación interna
+        // Update internal guidance
         ship.setHorizontal(horizontal);
     }
 
+    /** Getter for placed ships */
     public Deque<Ship> getPlacedShips() {
         return placedShips;
     }
 
+    /**
+     * Automatically places ships on the board for an AI player.
+     *
+     * @param cellSize The size of each cell for ship dimensions.
+     * @throws ShipPlacementException If a ship cannot be placed after multiple attempts.
+     */
     public void placeShipsAutomatically(double cellSize) throws ShipPlacementException {
 
-        // 1️⃣ Crear los barcos que la IA debe posicionar
+        //Create the ships that the AI must position
         List<Ship> shipsToPlace = new ArrayList<>();
 
         shipsToPlace.add(new Carrier(cellSize));          // 1 carrier
-        shipsToPlace.add(new Submarine(cellSize));        // 2 submarinos
+        shipsToPlace.add(new Submarine(cellSize));        // 2 submarines
         shipsToPlace.add(new Submarine(cellSize));
-        shipsToPlace.add(new Destroyer(cellSize));        // 3 destructores
+        shipsToPlace.add(new Destroyer(cellSize));        // 3 destroyers
         shipsToPlace.add(new Destroyer(cellSize));
         shipsToPlace.add(new Destroyer(cellSize));
-        shipsToPlace.add(new Frigate(cellSize));          // 4 fragatas
+        shipsToPlace.add(new Frigate(cellSize));          // 4 fragates
         shipsToPlace.add(new Frigate(cellSize));
         shipsToPlace.add(new Frigate(cellSize));
         shipsToPlace.add(new Frigate(cellSize));
 
         Random random = new Random();
 
-        // 2️⃣ Colocar cada barco
+        // Places every ship
         for (Ship ship : shipsToPlace) {
 
             boolean placed = false;
@@ -198,7 +253,7 @@ public class BoardPlayer implements Serializable {
                 int col = random.nextInt(10);
                 boolean horizontal = random.nextBoolean();
 
-                // 🔒 Validación centralizada
+                // Centralized validation
                 if (canPlace(ship, row, col, horizontal)) {
 
                     placeShip(ship, row, col, horizontal);
@@ -206,7 +261,7 @@ public class BoardPlayer implements Serializable {
                 }
             }
 
-            // 3️⃣ Protección contra bucle infinito
+            //Infinite loop protection
             if (!placed) {
                 throw new ShipPlacementException(
                         "No se pudo colocar el barco: " + ship.getClass().getSimpleName()

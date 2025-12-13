@@ -4,6 +4,9 @@ import com.example.battleship.model.exceptions.ShipPlacementException;
 import javafx.scene.layout.GridPane;
 import java.util.function.Consumer;
 
+/**
+ * Class responsible for enabling drag-and-drop functionality for ships on the game board.
+ */
 public class ShipPlacer {
 
     private final GridPane grid;
@@ -11,6 +14,14 @@ public class ShipPlacer {
     private final double cellSize;
     private final Consumer<Ship> onStartDrag;
 
+    /**
+     * Constructor for ShipPlacer.
+     *
+     * @param grid       The GridPane representing the game board.
+     * @param board      The BoardPlayer instance managing ship placements.
+     * @param cellSize   The size of each cell in the grid.
+     * @param onStartDrag A callback function invoked when a ship drag starts.
+     */
     public ShipPlacer(GridPane grid, BoardPlayer board, double cellSize, Consumer<Ship> onStartDrag) {
         this.grid = grid;
         this.board = board;
@@ -22,11 +33,17 @@ public class ShipPlacer {
     // ----------------------------------------------------------
     // DRAG & DROP
     // ----------------------------------------------------------
+
+    /**
+     * Enables drag-and-drop functionality for the given ship.
+     *
+     * @param ship The ship to enable drag-and-drop for.
+     */
     public void enableDrag(Ship ship) {
 
         final double[] dragOffset = new double[2];
 
-        // GUARDAR POSICIÓN ORIGINAL (translateX/Y)
+        // SAVE ORIGINAL POSITION (translateX/Y)
         ship.setOnMousePressed(e -> {
 
             onStartDrag.accept(ship);
@@ -42,13 +59,13 @@ public class ShipPlacer {
             e.consume();
         });
 
-        // ARRASTRAR EN PANEL LATERAL (usa translate)
+        // DRAG INTO SIDE PANEL
         ship.setOnMouseDragged(e -> {
 
             double sceneX = e.getSceneX();
             double sceneY = e.getSceneY();
 
-            // obtener la posición actual en escena
+            // get the current position in scene
             double nodeX = ship.localToScene(0,0).getX();
             double nodeY = ship.localToScene(0,0).getY();
 
@@ -58,10 +75,10 @@ public class ShipPlacer {
             e.consume();
         });
 
-        // SOLTAR
+        // DROP
         ship.setOnMouseReleased(e -> {
 
-            // convertir a coordenadas del grid
+            // convert to grid coordinates
             double sceneX = e.getSceneX();
             double sceneY = e.getSceneY();
 
@@ -91,14 +108,14 @@ public class ShipPlacer {
                 ship.setTranslateX(0);
                 ship.setTranslateY(0);
 
-                ship.setPlaced(true);// bloquea rotacion
+                ship.setPlaced(true);// blocks rotation
 
                 ship.setOnMouseDragged(null);
                 ship.setOnMousePressed(null);
                 ship.setOnMouseReleased(null);
 
             } else {
-                // regresar a la posición original
+                // return to the original position
                 double[] orig = (double[]) ship.getUserData();
                 ship.setTranslateX(orig[0]);
                 ship.setTranslateY(orig[1]);

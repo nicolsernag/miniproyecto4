@@ -12,6 +12,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Singleton class representing the game stage for the Battleship game.
+ * It initializes the game view and controller, and manages the display of the game window.
+ */
 public class GameStage extends Stage{
 
     private static GameStage instance;

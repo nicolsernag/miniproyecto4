@@ -1,0 +1,9 @@
+module:com.example.battleship
+com.example.battleship
+com.example.battleship.controller
+com.example.battleship.model
+com.example.battleship.model.exceptions
+com.example.battleship.model.GameState
+com.example.battleship.model.serializable
+com.example.battleship.model.threads
+com.example.battleship.view

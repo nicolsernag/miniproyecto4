@@ -8,15 +8,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Pruebas unitarias para la clase abstracta Ship.
- * Se usa una implementación concreta de prueba (TestShip).
+ * Unit tests for the Ship class.
  */
 class ShipTest {
 
     private Ship ship;
 
+
     /**
-     * Inicializa JavaFX una sola vez para permitir el uso de Pane en pruebas.
+     * * Initializes the JavaFX platform before running tests.
      */
     @BeforeAll
     static void initJavaFX() {
@@ -24,33 +24,45 @@ class ShipTest {
     }
 
     /**
-     * Crea un barco de prueba antes de cada test.
+     * Sets up a new Ship instance before each test.
      */
     @BeforeEach
     void setUp() {
         ship = new TestShip(3);
     }
 
-    // 🚢 Verifica que el tamaño del barco se inicializa correctamente
+    // Verify that the ship size is initialized correctly
+    /**
+     * Test to verify that the ship size is initialized correctly.
+     */
     @Test
     void shipSizeIsCorrect() {
         assertEquals(3, ship.getSize());
     }
 
-    // 📐 Comprueba que la orientación por defecto del barco es horizontal
+    // Check that the ship's default orientation is horizontal.
+    /**
+     * Test to check that the ship's default orientation is horizontal.
+     */
     @Test
     void shipIsHorizontalByDefault() {
         assertTrue(ship.isHorizontal());
     }
 
-    // 🔄 Verifica que al cambiar la orientación se actualiza correctamente
+    // Check that the ship's default orientation is horizontal.
+    /**
+     * Test to check that setting the ship's orientation works correctly.
+     */
     @Test
     void setHorizontalChangesOrientation() {
         ship.setHorizontal(false);
         assertFalse(ship.isHorizontal());
     }
 
-    // 📏 Comprueba que el tamaño visual cambia según la orientación
+    // Check that the visual size changes depending on the orientation.
+    /**
+     * Test to check that the visual size updates correctly based on orientation.
+     */
     @Test
     void updateVisualSizeUpdatesWidthAndHeight() {
         double cellSize = 40;
@@ -66,18 +78,24 @@ class ShipTest {
         assertEquals(120, ship.getPrefHeight());
     }
 
-    // 🧩 Verifica que se pueden añadir celdas al barco hasta su tamaño máximo
+    // Verify that cells can be added to the ship up to its maximum size
+    /**
+     * Test to verify that cells can be added to the ship up to its maximum size.
+     */
     @Test
     void addCellAddsCellsUpToShipSize() {
         ship.addCell(new Cell(0, 0));
         ship.addCell(new Cell(0, 1));
         ship.addCell(new Cell(0, 2));
-        ship.addCell(new Cell(0, 3)); // esta no debería entrar
+        ship.addCell(new Cell(0, 3)); // this one shouldn't go in
 
         assertEquals(3, ship.getOccupiedCells().size());
     }
 
-    // 🧹 Comprueba que clearCells elimina todas las celdas ocupadas
+    // Verify that clearCells removes all occupied cells
+    /**
+     * Test to verify that clearCells removes all occupied cells.
+     */
     @Test
     void clearCellsRemovesAllOccupiedCells() {
         ship.addCell(new Cell(1, 1));
@@ -88,7 +106,10 @@ class ShipTest {
         assertTrue(ship.getOccupiedCells().isEmpty());
     }
 
-    // 💥 Verifica que un barco no se hunde si no todos los segmentos han sido golpeados
+    // Check that a ship does not sink if not all segments have been hit
+    /**
+     * Test to check that a ship does not sink if not all segments have been hit.
+     */
     @Test
     void shipIsNotSunkWhenNotAllSegmentsHit() {
         ship.registerHit(0);
@@ -97,7 +118,10 @@ class ShipTest {
         assertFalse(ship.isSunk());
     }
 
-    // 🚢💣 Comprueba que el barco se hunde cuando todos los segmentos son golpeados
+    // Verify that the ship sinks when all segments are hit.
+    /**
+     * Test to verify that the ship sinks when all segments are hit.
+     */
     @Test
     void shipIsSunkWhenAllSegmentsAreHit() {
         ship.registerHit(0);
@@ -108,7 +132,7 @@ class ShipTest {
     }
 
     /**
-     * Implementación concreta de Ship solo para pruebas.
+     * A simple subclass of Ship for testing purposes.
      */
     private static class TestShip extends Ship {
         public TestShip(int size) {

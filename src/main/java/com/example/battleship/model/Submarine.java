@@ -6,8 +6,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
+/**
+ * Class representing a Submarine ship in the Battleship game.
+ */
 public class Submarine extends Ship {
 
+    /**
+     * Constructs a Submarine with the specified cell size for scaling.
+     *
+     * @param cellSize the size of a single cell in the game grid
+     */
     public Submarine(double cellSize) {
         super(3);
 
@@ -37,7 +45,7 @@ public class Submarine extends Ship {
 
         this.getChildren().addAll(body, tower, window);
 
-        /* ESCALADO AUTOMÁTICO */
+        /* AUTO SCALING */
 
         this.applyCss();
         this.layout();

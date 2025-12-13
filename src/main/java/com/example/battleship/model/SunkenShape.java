@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.QuadCurve;
 
+/**
+ * A JavaFX Group representing a sunken ship shape composed of various polygons and curves.
+ */
 public class SunkenShape extends Group {
 
     public SunkenShape(double size) {

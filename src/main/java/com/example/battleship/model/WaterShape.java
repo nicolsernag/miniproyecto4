@@ -4,8 +4,16 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+/**
+ * A JavaFX Group representing a water shape composed of lines.
+ */
 public class WaterShape extends Group {
 
+    /**
+     * Constructs a WaterShape with the specified size.
+     *
+     * @param size the size to scale the shape
+     */
     public WaterShape(double size) {
 
         double scale = size / 40.0;

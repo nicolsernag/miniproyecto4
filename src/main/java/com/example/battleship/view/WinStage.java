@@ -10,11 +10,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * A JavaFX Stage representing the Welcome screen of the Battleship game.
+ * <p>
+ * This class follows the Singleton design pattern to ensure that only one instance
+ * of the WelcomeStage exists at any given time.
+ */
 public class WinStage extends Stage {
     private WinStageController controller;
 
     /**
-     * Private constructor that initializes and displays the WelcomeStage.
+     * Private constructor that initializes and displays the WinStage.
      * <p>
      * This method loads the FXML file, configures the scene,
      * sets window properties such as title and icon, and displays the stage.
@@ -36,10 +42,21 @@ public class WinStage extends Stage {
     }
 
 
+    /**
+     * Static inner class responsible for holding the singleton instance of WinStage.
+     */
     private static class Holder {
         private static WinStage INSTANCE = null;
     }
 
+    /**
+     * Returns the singleton instance of WinStage.
+     * <p>
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of WinStage
+     * @throws IOException if the WinStage cannot be created
+     */
     public static WinStage getInstance() throws IOException {
         if (WinStage.Holder.INSTANCE == null) {
             WinStage.Holder.INSTANCE = new WinStage();
@@ -47,6 +64,11 @@ public class WinStage extends Stage {
         return WinStage.Holder.INSTANCE;
     }
 
+    /**
+     * Deletes the singleton instance of WinStage.
+     * <p>
+     * This method closes the stage and sets the instance to null.
+     */
     public static void deleteInstance() {
         if (WinStage.Holder.INSTANCE != null) {
             WinStage.Holder.INSTANCE.close();
@@ -54,6 +76,11 @@ public class WinStage extends Stage {
         }
     }
 
+    /**
+     * Returns the controller associated with this stage.
+     *
+     * @return a {@link WinStageController} instance
+     */
     public WinStageController getController() {
         return controller;
     }

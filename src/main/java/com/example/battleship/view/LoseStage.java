@@ -10,11 +10,17 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * A JavaFX Stage representing the Lose screen of the Battleship game.
+ * <p>
+ * This class follows the Singleton design pattern to ensure that only one instance
+ * of the LoseStage exists at any given time.
+ */
 public class LoseStage extends Stage {
     private LoseController controller;
 
     /**
-     * Private constructor that initializes and displays the WelcomeStage.
+     * Private constructor that initializes and displays the LoseStage.
      * <p>
      * This method loads the FXML file, configures the scene,
      * sets window properties such as title and icon, and displays the stage.
@@ -36,10 +42,21 @@ public class LoseStage extends Stage {
     }
 
 
+    /**
+     * Static inner class responsible for holding the singleton instance of LoseStage.
+     */
     private static class Holder {
         private static LoseStage INSTANCE = null;
     }
 
+    /**
+     * Returns the singleton instance of LoseStage.
+     * <p>
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of LoseStage
+     * @throws IOException if the LoseStage cannot be created
+     */
     public static LoseStage getInstance() throws IOException {
         if (LoseStage.Holder.INSTANCE == null) {
             LoseStage.Holder.INSTANCE = new LoseStage();
@@ -47,6 +64,12 @@ public class LoseStage extends Stage {
         return LoseStage.Holder.INSTANCE;
     }
 
+    /**
+     * Deletes the singleton instance of LoseStage.
+     * <p>
+     * This method closes the stage and sets the instance to null,
+     * allowing for a new instance to be created later if needed.
+     */
     public static void deleteInstance() {
         if (LoseStage.Holder.INSTANCE != null) {
             LoseStage.Holder.INSTANCE.close();
@@ -54,6 +77,10 @@ public class LoseStage extends Stage {
         }
     }
 
+    /**
+     * Returns the LoseController associated with this LoseStage.
+     * @return
+     */
     public LoseController getController() {
         return controller;
     }

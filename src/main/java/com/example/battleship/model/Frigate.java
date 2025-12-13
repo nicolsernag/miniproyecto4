@@ -6,15 +6,24 @@ import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
+/**
+ * Represents a Frigate ship in the Battleship game.
+ * The Frigate occupies 1 cell on the game board.
+ */
 public class Frigate extends Ship {
 
+    /**
+     * Constructs a Frigate ship with visual representation scaled to the given cell size.
+     *
+     * @param cellSize The size of a single cell on the game board.
+     */
     public Frigate(double cellSize) {
-        super(1); // ocupa 1 celda
+        super(1); // It occupies 1 cell
 
         double targetSize = cellSize;
         this.setPrefSize(targetSize, targetSize);
 
-        /* ----- FIGURAS ORIGINALES DEL FXML (normalizadas ≈40 px) ----- */
+        /* ----- ORIGINAL FIGURES FROM FXML (normalized ≈40 px) ----- */
 
         QuadCurve curve = new QuadCurve();
         curve.setStartX(41.0);
@@ -60,10 +69,10 @@ public class Frigate extends Ship {
         tower.setLayoutX(23);
         tower.setLayoutY(9);
 
-        // Añadir shapes al Pane
+        // Adds shapes to Pane
         this.getChildren().addAll(curve, body, w1, w2, tower);
 
-        /* ----- ESCALADO AUTOMÁTICO ----- */
+        /* ----- AUTO SCALING ----- */
 
         this.applyCss();
         this.layout();

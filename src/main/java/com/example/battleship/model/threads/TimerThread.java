@@ -4,6 +4,10 @@ package com.example.battleship.model.threads;
 import com.example.battleship.controller.GameController;
 import javafx.application.Platform;
 
+/**
+ * TimerThread is responsible for managing a countdown timer in the game.
+ * It updates the UI every second and notifies the GameController when time expires.
+ */
 public class TimerThread extends Thread {
    private final GameController controller;
     private final int timeLimitSeconds = 15; //time limit
@@ -11,7 +15,11 @@ public class TimerThread extends Thread {
 
 
 
-
+    /**
+     * Constructs a TimerThread with the specified GameController.
+     *
+     * @param controller the GameController to notify when time expires
+     */
     public TimerThread(GameController controller) {
         this.controller = controller;
     }

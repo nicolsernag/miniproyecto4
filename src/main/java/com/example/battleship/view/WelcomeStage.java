@@ -9,6 +9,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+
+/**
+ * A JavaFX Stage representing the Welcome screen of the Battleship game.
+ * <p>
+ * This class follows the Singleton design pattern to ensure that only one instance
+ * of the WelcomeStage exists at any given time.
+ */
 public class WelcomeStage extends Stage {
     private WelcomeStageController controller;
 
@@ -35,10 +42,21 @@ public class WelcomeStage extends Stage {
     }
 
 
+    /**
+     * Static inner class responsible for holding the singleton instance of WelcomeStage.
+     */
     private static class Holder {
         private static WelcomeStage INSTANCE = null;
     }
 
+    /**
+     * Returns the singleton instance of WelcomeStage.
+     * <p>
+     * If the instance does not exist, it is created.
+     *
+     * @return the singleton instance of WelcomeStage
+     * @throws IOException if the WelcomeStage cannot be created
+     */
     public static WelcomeStage getInstance() throws IOException {
         if (Holder.INSTANCE == null) {
             Holder.INSTANCE = new WelcomeStage();
@@ -46,6 +64,12 @@ public class WelcomeStage extends Stage {
         return Holder.INSTANCE;
     }
 
+    /**
+     * Deletes the singleton instance of WelcomeStage.
+     * <p>
+     * This method closes the stage and sets the instance to null,
+     * allowing for a new instance to be created in the future.
+     */
     public static void deleteInstance() {
         if (Holder.INSTANCE != null) {
             Holder.INSTANCE.close();
@@ -53,6 +77,11 @@ public class WelcomeStage extends Stage {
         }
     }
 
+    /**
+     * Returns the controller associated with this stage.
+     *
+     * @return a {@link WelcomeStageController} instance
+     */
     public WelcomeStageController getController() {
         return controller;
     }
