@@ -13,12 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -166,8 +163,8 @@ public class GameController {
         for (int r = 0; r < 10; r++) {
               for (int c = 0; c < 10; c++) {
 
-                   Pane cell = new Pane();
-                      cell.setPrefSize(CELL_SIZE, CELL_SIZE);
+                  StackPane cell = new StackPane();
+                  cell.setPrefSize(CELL_SIZE, CELL_SIZE);
 
                 cell.setStyle(" -fx-background-color: #a5b7c6; -fx-border-color: white; -fx-border-width: 1; ");
 
@@ -257,44 +254,40 @@ public class GameController {
         }
 
 
-        private void paintShot(GridPane grid,int row, int col, ShotResult result){
-            ImageView mark;
-            String imagePath;
+    private void paintShot(GridPane grid, int row, int col, ShotResult result) {
 
-            switch (result) {
-                case WATER:
-                    imagePath = "/com/example/battleship/ola.png";
-                    break;
-                case HIT:
-                    imagePath = "/com/example/battleship/bomba.png";
-                    break;
-                case SUNK:
-                    imagePath = "/com/example/battleship/fuego.png";
-                    break;
-                default:
-                    return;
+        StackPane cell = null;
+
+        // 1. Buscar la celda correcta
+        for (Node n : grid.getChildren()) {
+            if (GridPane.getRowIndex(n) == row &&
+                    GridPane.getColumnIndex(n) == col) {
+                cell = (StackPane) n;
+                break;
             }
-
-            // 2. Crear el ImageView a partir de la ruta de la imagen
-            try {
-                Image image = new Image(getClass().getResourceAsStream(imagePath));
-                mark = new ImageView(image);
-
-                // 3. Configurar el tamaño del ImageView al tamaño de la celda
-                mark.setFitWidth(CELL_SIZE);
-                mark.setFitHeight(CELL_SIZE);
-                mark.setPreserveRatio(true);
-
-            } catch (Exception e) {
-                System.err.println("Error al cargar la imagen: " + imagePath);
-                //Si la imagen falla, usamos el rectángulo rojo de respaldo para impacto
-                Rectangle errorMark = new Rectangle(CELL_SIZE, CELL_SIZE, Color.RED);
-                grid.add(errorMark, col, row); // Usa grid.add(mark, col, row) de la línea 39
-                return;
-            }
-            grid.add(mark, col, row);
         }
+
+        if (cell == null) return;
+
+        // 2. Evitar disparar dos veces en la misma celda
+        if (cell.getProperties().containsKey("shot")) return;
+
+        cell.getProperties().put("shot", true);
+
+        Node shape;
+
+        // 3. Crear el Shape según el resultado
+        switch (result) {
+            case WATER -> shape = new WaterShape(CELL_SIZE);
+            case HIT   -> shape = new TouchedShape(CELL_SIZE);
+            case SUNK  -> shape = new SunkenShape(CELL_SIZE);
+            default    -> { return; }
+        }
+
+        // 4. Añadir el disparo encima de la celda
+        cell.getChildren().add(shape);
     }
+}
 
 
 

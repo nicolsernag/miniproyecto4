@@ -1,9 +1,6 @@
 package com.example.battleship.model;
 
 import com.example.battleship.model.exceptions.ShipPlacementException;
-import com.example.battleship.model.serializable.CellData;
-import com.example.battleship.model.serializable.ShipData;
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -32,9 +29,6 @@ public class BoardPlayer implements Serializable {
     }
 
 
-
-
-
     public Cell getCell(int row, int col) {
         return grid.get(row).get(col);
     }
@@ -48,16 +42,34 @@ public class BoardPlayer implements Serializable {
 
         int size = ship.getSize();
 
+        // 1️⃣ Validar coordenadas iniciales
+        if (row < 0 || col < 0) return false;
+
+        // 2️⃣ Validar que el barco cabe completo según orientación
+        if (horizontal) {
+            if (col + size > 10) return false;   // se sale por la derecha
+        } else {
+            if (row + size > 10) return false;   // se sale por abajo
+        }
+
+        // 3️⃣ Validar colisiones celda por celda
         for (int i = 0; i < size; i++) {
+
             int r = horizontal ? row : row + i;
             int c = horizontal ? col + i : col;
 
-            if (!isInside(r, c)) return false;
+            Cell cell = getCell(r, c);
 
-            if (getCell(r, c).isOccupied()) return false;
+            // Si la celda ya está ocupada, no se puede colocar
+            if (cell.isOccupied()) {
+                return false;
+            }
         }
+
+        // 4️⃣ Todo es válido
         return true;
     }
+
 
 
 
@@ -156,36 +168,52 @@ public class BoardPlayer implements Serializable {
 
     public void placeShipsAutomatically(double cellSize) throws ShipPlacementException {
 
-        // 1. Crear los barcos que la IA debe posicionar
-        ArrayList<Ship> shipsToPlace = new ArrayList<>();
-        shipsToPlace.add(new Carrier(cellSize));  // 1 carrier
-        for (int i = 0; i < 2; i++) shipsToPlace.add(new Submarine(cellSize));  // 2 submarinos
-        for (int i = 0; i < 3; i++) shipsToPlace.add(new Destroyer(cellSize));  // 3 destructores
-        for (int i = 0; i < 4; i++) shipsToPlace.add(new Frigate(cellSize));    // 4 fragatas
+        // 1️⃣ Crear los barcos que la IA debe posicionar
+        List<Ship> shipsToPlace = new ArrayList<>();
 
+        shipsToPlace.add(new Carrier(cellSize));          // 1 carrier
+        shipsToPlace.add(new Submarine(cellSize));        // 2 submarinos
+        shipsToPlace.add(new Submarine(cellSize));
+        shipsToPlace.add(new Destroyer(cellSize));        // 3 destructores
+        shipsToPlace.add(new Destroyer(cellSize));
+        shipsToPlace.add(new Destroyer(cellSize));
+        shipsToPlace.add(new Frigate(cellSize));          // 4 fragatas
+        shipsToPlace.add(new Frigate(cellSize));
+        shipsToPlace.add(new Frigate(cellSize));
+        shipsToPlace.add(new Frigate(cellSize));
 
         Random random = new Random();
 
-        // 2. Iterar y colocar cada barco
+        // 2️⃣ Colocar cada barco
         for (Ship ship : shipsToPlace) {
+
             boolean placed = false;
-            while (!placed) {
-                // Generar coordenadas aleatorias (0-9)
+            int attempts = 0;
+            final int MAX_ATTEMPTS = 1000;
+
+            while (!placed && attempts < MAX_ATTEMPTS) {
+                attempts++;
+
                 int row = random.nextInt(10);
                 int col = random.nextInt(10);
-
-                // Generar orientación aleatoria (true = horizontal, false = vertical)
                 boolean horizontal = random.nextBoolean();
 
-
+                // 🔒 Validación centralizada
                 if (canPlace(ship, row, col, horizontal)) {
-
 
                     placeShip(ship, row, col, horizontal);
                     placed = true;
                 }
             }
+
+            // 3️⃣ Protección contra bucle infinito
+            if (!placed) {
+                throw new ShipPlacementException(
+                        "No se pudo colocar el barco: " + ship.getClass().getSimpleName()
+                );
+            }
         }
     }
+
 }
 
