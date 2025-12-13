@@ -47,14 +47,6 @@ public class SelectionController {
         createFleetInPanel();
 
 
-        // 4) Preparar escucha de tecla R para rotar la pieza actual
-        // El scene puede no estar aún disponible; esperamos a que se asocie
-        playerGrid.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.addEventHandler(KeyEvent.KEY_PRESSED, this::onKeyPressed);
-            }
-        });
-
         continueButton.toFront();
 
         continueButton.setOnAction(e -> {
@@ -156,20 +148,6 @@ public class SelectionController {
         currentDraggingShip = ship;
     }
 
-    /**
-     * Maneja la tecla R: si hay un barco siendo arrastrado, lo rota 90 grados.
-     */
-    private void onKeyPressed(KeyEvent event) {
-        if (event.getCode() == KeyCode.R && currentDraggingShip != null) {
-            // rotar 90 grados
-            double newRot = (currentDraggingShip.getRotate() + 90) % 360;
-            currentDraggingShip.setRotate(newRot);
-
-            // (opcional) guardar orientación en properties
-            boolean horizontal = Math.abs(newRot % 180) < 45;
-            currentDraggingShip.getProperties().put("orientation", horizontal ? "H" : "V");
-        }
-    }
 
     /**
      * Comprueba si todos los barcos fueron colocados en el tablero.

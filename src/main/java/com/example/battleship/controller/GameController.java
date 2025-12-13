@@ -3,7 +3,6 @@ package com.example.battleship.controller;
 import com.example.battleship.model.*;
 import com.example.battleship.model.threads.MachineThread;
 import com.example.battleship.model.threads.TimerThread;
-import com.example.battleship.view.BoardRenderer;
 import com.example.battleship.view.GameStage;
 import com.example.battleship.view.LoseStage;
 import com.example.battleship.view.WinStage;
@@ -43,8 +42,6 @@ public class GameController {
 
     private MachineThread machineThread;
     private TimerThread timerThread;
-    //private BoardRenderer boardRenderer; //new
-    //private TurnsControlController turnsControl;
 
 
     private boolean playerTurn = true;
@@ -53,22 +50,14 @@ public class GameController {
     public void initializeBoards(BoardPlayer player, BoardPlayer enemy) {
         this.playerBoard = player;
         this.enemyBoard = enemy;
-        //this.boardRenderer = new BoardRenderer(CELL_SIZE); //new//
         buildGrid(playerGrid);
         buildGrid(enemyGrid);
         timerThread = new TimerThread(this);
         timerThread.start();
         drawPlayerShips();
 
-        //boardRenderer.buildGrid(playerGrid); //new
-        //boardRenderer.buildGrid(enemyGrid); //new
-        //boardRenderer.drawPlayerShips(playerGrid, playerBoard);
-
         machineThread = new MachineThread(playerBoard);
-        //this.turnsControl = new TurnsControlController(this, playerBoard, enemyBoard, machineThread);
 
-        //timerThread = new TimerThread(this);
-        //timerThread.start();
         hideButton.setText("");
         msgHumanPlayer.setText("");
         machineThread.setListener((row, col, result) -> {
@@ -96,89 +85,6 @@ public class GameController {
         prepareEnemyClicks();
     }
 
-    //public GridPane getEnemyGrid() {
-       // return enemyGrid;
-    //}
-
-   // public GridPane getPlayerGrid() {
-       // return playerGrid;
-    //}
-
-    //public BoardRenderer getRenderer() {
-       // return boardRenderer;
-    //}
-
-    //new
-   // public void startPlayerTimer() {
-     //   if (timerThread != null) {
-       //     timerThread.stopTimer();
-         //   timerThread = null;
-        //}
-        //timerThread = new TimerThread(this);
-        //timerThread.start();
-       // playerTurn = true;
-        //msgHumanPlayer.setText("");
-    //}
-
-    //new
-    //public void stopPlayerTimer() {
-      //  if (timerThread != null) {
-        //    timerThread.stopTimer();
-          //  timerThread = null;
-        //}
-        //playerTurn = false;
-    //}
-
-    //new
-   // public void handlePlayerTurn() {
-     //   if (!playerTurn) return;
-       // Pane clicked = (Pane) e.getSource();
-        //int row = (int) clicked.getProperties().get("row");
-        //int col = (int) clicked.getProperties().get("col");
-        //ShotResult result = enemyBoard.shoot(row, col);
-        //if (result == null) return;
-        //boardRenderer.paintShot(enemyGrid, row, col, result);
-        //if (result == ShotResult.SUNK && enemyBoard.allShipsSunk()) {
-          //  System.out.println("GANASTE");
-            //try {
-              //  GameStage.deleteInstance();
-                //var controller = WinStage.getInstance().getController();
-            //} catch (java.io.IOException ex) {
-              //  System.err.println("No se puede crear Win Stage: " + ex.getMessage());
-                //ex.printStackTrace();
-            //}
-            //return;
-
-            // startPlayerTimer();
-
-       // }
-    //}
-
-
-        //public void handlePlayerWin () {
-          //  System.out.println("GANASTE");
-            //try {
-              //  GameStage.deleteInstance();
-                //var controller = WinStage.getInstance().getController();
-            //} catch (java.io.IOException ex) {
-              //  System.err.println("No se puede crear Win Stage: " + ex.getMessage());
-                //ex.printStackTrace();
-            //}
-
-        //}
-
-
-        //neww
-       // public void handlePlayerLoss () {
-         //   System.out.println("perdiste");
-           // try {
-             //   var controller = LoseStage.getInstance().getController(); // <- paréntesis añadidos
-               // GameStage.deleteInstance();
-            //} catch (java.io.IOException ex) {
-              //  System.err.println("No se pudo crear LoseStage: " + ex.getMessage());
-                //ex.printStackTrace();
-            //}
-        //}
 
         public double getCELL_SIZE () {
             return CELL_SIZE;
@@ -313,18 +219,6 @@ public class GameController {
             }
         }
 
-      //  private void handlePlayerShot (MouseEvent e){
-        //    Pane clicked = (Pane) e.getSource();
-          //  int row = (int) clicked.getProperties().get("row");
-            //int col = (int) clicked.getProperties().get("col");
-            //turnsControl.processPlayerShot(row, col, clicked);
-
-            //ShotResult result = enemyBoard.shoot(row, col);
-            //if (result != null && result == ShotResult.WATER) {
-              //  playerTurn = false;
-
-            //}
-        //}
         public void handlePlayerShot (MouseEvent e){
 
             if (!playerTurn) return;
