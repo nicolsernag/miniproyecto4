@@ -66,16 +66,10 @@ public abstract class Ship extends Pane implements Serializable {
 
     /* ----------------- POSICIÓN Y CELDAS ----------------- */
 
-    public Map<Integer, Boolean> getSegmentHit() {
-        return segmentHit;
-    }
 
 
     private boolean placed = false;
 
-    public boolean isPlaced() {
-        return placed;
-    }
 
     public void setPlaced(boolean placed) {
         this.placed = placed;
@@ -88,21 +82,6 @@ public abstract class Ship extends Pane implements Serializable {
         } else {
             setPrefWidth(cellSize);
             setPrefHeight(cellSize * size);
-        }
-    }
-
-
-    public void rotateAt(int startRow, int startCol) {
-        // 1. Cambiar orientación
-        this.horizontal = !this.horizontal;
-        this.setRotate(this.getRotate() == 0 ? 90 : 0);
-
-        // 2. Recalcular celdas según orientación
-        occupiedCells.clear();
-        for (int i = 0; i < size; i++) {
-            int r = horizontal ? startRow : startRow + i;
-            int c = horizontal ? startCol + i : startCol;
-            occupiedCells.add(new Cell(r, c));
         }
     }
 
@@ -125,14 +104,6 @@ public abstract class Ship extends Pane implements Serializable {
     }
 
     /**
-     * Guarda la posición actual del barco en el historial (Deque).
-     */
-    public void savePosition() {
-        // guardamos una copia superficial de la lista de celdas
-        lastPositions.push(new ArrayList<>(occupiedCells));
-    }
-
-    /**
      * Recupera la última posición guardada (si existe).
      */
     public void undoPosition() {
@@ -143,23 +114,6 @@ public abstract class Ship extends Pane implements Serializable {
         }
     }
 
-    /**
-     * Establece posición lógica del barco a partir de fila/col y orientación.
-     * No cambia la parte gráfica; BoardPlayer debe invocar esto y luego anclar visualmente.
-     *
-     * @param startRow fila inicial
-     * @param startCol columna inicial
-     * @param horizontal true si horizontal, false si vertical
-     */
-    public void setPosition(int startRow, int startCol, boolean horizontal) {
-        this.horizontal = horizontal;
-        occupiedCells.clear();
-        for (int i = 0; i < size; i++) {
-            int r = horizontal ? startRow : startRow + i;
-            int c = horizontal ? startCol + i : startCol;
-            occupiedCells.add(new Cell(r, c));
-        }
-    }
 
     /* ----------------- GOLPES / ESTADO ----------------- */
 
@@ -169,10 +123,6 @@ public abstract class Ship extends Pane implements Serializable {
      */
     public void registerHit(int index) {
         if (segmentHit.containsKey(index)) segmentHit.put(index, true);
-    }
-
-    public boolean isHitAtSegment(int index) {
-        return segmentHit.getOrDefault(index, false);
     }
 
     /**
