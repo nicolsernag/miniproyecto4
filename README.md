@@ -13,6 +13,7 @@ The project focuses on applying concepts of object-oriented programming, excepti
 
 ## Table of Contents
 - [Installation](#installation)
+- [Technologies Used](#technologies)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -56,4 +57,3 @@ This project is for educational use.
 - Nicol Serna [nicolsernag]
 - María José Gonzalez [majo181504]
 
-Update README
